@@ -10,11 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/recette')]
-final class RecetteController extends AbstractController
+class RecetteController extends AbstractController
 {
-    #[Route(name: 'app_recette_index', methods: ['GET'])]
+    #[Route('/', name: 'app_recette_index', methods: ['GET'])]
     public function index(RecetteRepository $recetteRepository): Response
     {
         return $this->render('recette/index.html.twig', [
@@ -22,14 +23,37 @@ final class RecetteController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_recette_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'app_recette_ajouter', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $recette = new Recette();
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Kullanıcı kimliğini tarifin yazarı olarak ayarla
+            $recette->setAuteur($this->getUser());
+            $recette->setCreatedAt(new \DateTimeImmutable());
+            
+            // Handle the image upload
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('recettes_images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // handle exception if something goes wrong during file upload
+                }
+
+                $recette->setImage($newFilename);
+            }
+
             $entityManager->persist($recette);
             $entityManager->flush();
 
@@ -42,7 +66,7 @@ final class RecetteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_recette_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_recette_detail', methods: ['GET'])]
     public function show(Recette $recette): Response
     {
         return $this->render('recette/show.html.twig', [
@@ -54,6 +78,7 @@ final class RecetteController extends AbstractController
     public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(RecetteType::class, $recette);
+       
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,7 +96,7 @@ final class RecetteController extends AbstractController
     #[Route('/{id}', name: 'app_recette_delete', methods: ['POST'])]
     public function delete(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$recette->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$recette->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($recette);
             $entityManager->flush();
         }

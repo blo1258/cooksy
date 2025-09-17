@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le profil{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg max-w-lg mt-10">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Modifier mon profil</h1>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_row(form.nom) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.imageFile) }}
+
+            <div class="mt-4 text-center">
+                {% if user.image %}
+                    <p class="text-sm text-gray-600 mb-2">Image actuelle :</p>
+                    <img src="{{ asset('uploads/' ~ user.image) }}" alt="Image de profil actuelle" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-gray-300 object-cover">
+                {% endif %}
+            </div>
+
+            <div class="flex justify-between items-center mt-6">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+                    Enregistrer les modifications
+                </button>
+                <a href="{{ path('app_profil') }}" class="text-gray-600 hover:underline">
+                    Annuler
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

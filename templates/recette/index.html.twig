@@ -31,7 +31,7 @@
                 <td>{{ recette.tempCuisson }}</td>
                 <td>{{ recette.image }}</td>
                 <td>
-                    <a href="{{ path('app_recette_show', {'id': recette.id}) }}">show</a>
+                    <a href="{{ path('app_recette_detail', {'id': recette.id}) }}">show</a>
                     <a href="{{ path('app_recette_edit', {'id': recette.id}) }}">edit</a>
                 </td>
             </tr>
@@ -43,5 +43,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_recette_new') }}">Create new</a>
+    <a href="{{ path('app_recette_ajouter') }}">Create new</a>
 {% endblock %}

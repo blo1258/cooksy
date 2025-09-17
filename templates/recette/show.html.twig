@@ -1,50 +1,124 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recette{% endblock %}
+{% block title %}Recette | {{ recette.titre }}{% endblock %}
 
 {% block body %}
-    <h1>Recette</h1>
+<header class="bg-[#2e2e2e] shadow-md">
+    <div class="container mx-auto flex items-center justify-between p-4 flex-wrap">
+        <div class="flex-shrink-0">
+            <a href="{{ path('app_accueil') }}">
+                <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-20 w-auto">
+            </a>
+        </div>
+        <div class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
+            <input type="search" placeholder="Que faisons-nous aujourd'hui ?" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-300 placeholder-white">
+            <button type="submit" class="absolute right-0 top-0 mt-2 mr-4 text-gray-500">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="flex space-x-2 md:space-x-4">
+            {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div class="user-info flex items-center space-x-2">
+                    {% if app.user.image %}
+                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar border-2 w-[76px] h-[76px] border-orange-500">
+                    {% else %}
+                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                    {% endif %}
+                    <a href="{{ path('app_profil') }}" class="text-gray-200 hover:text-orange-600 font-medium">
+                        {{ app.user.nom }}
+                    </a>
+                    <a href="{{ path('app_logout') }}" class="text-red-500 hover:text-red-600 font-medium">
+                        Se déconnecter
+                    </a>
+                </div>
+            {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
+            {% else %}
+                <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
+                <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<!-- Yeni Menü -->
+<nav class="bg-gray-100 shadow-sm p-4 text-center">
+    <div class="container mx-auto flex justify-center space-x-6">
+        <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Recettes</a>
+        <a href="#" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Cuisines</a>
+        <a href="{{ path('app_astuces_index') }}" class="text-orange-600 font-semibold transition duration-300">Astuces</a>
+        <a href="#" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">À propos</a>
+    </div>
+</nav>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ recette.id }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ recette.titre }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ recette.description }}</td>
-            </tr>
-            <tr>
-                <th>Ingredients</th>
-                <td>{{ recette.ingredients }}</td>
-            </tr>
-            <tr>
-                <th>Etapes</th>
-                <td>{{ recette.etapes }}</td>
-            </tr>
-            <tr>
-                <th>Temp_preparation</th>
-                <td>{{ recette.tempPreparation }}</td>
-            </tr>
-            <tr>
-                <th>Temp_cuisson</th>
-                <td>{{ recette.tempCuisson }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td>{{ recette.image }}</td>
-            </tr>
-        </tbody>
-    </table>
+<main class="container mx-auto p-4 md:p-8">
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden md:flex md:flex-col lg:flex-row">
+        <!-- Tarif Görseli ve Bilgileri -->
+        <div class="relative w-full lg:w-1/2 h-96 md:h-[500px] lg:h-auto">
+            {% if recette.image is not null %}
+                <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
+                     alt="{{ recette.titre }}" 
+                     class="w-full h-full object-cover rounded-t-lg lg:rounded-r-none lg:rounded-l-lg">
+            {% endif %}
+        </div>
 
-    <a href="{{ path('app_recette_index') }}">back to list</a>
+        <!-- Tarif Detayları -->
+        <div class="p-6 md:p-8 w-full lg:w-1/2">
+            <!-- Başlık ve Yazar -->
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ recette.titre }}</h1>
+            <p class="text-sm text-gray-600 mb-4">par <span class="font-medium text-orange-600">{{ recette.auteur.nom }}</span></p>
 
-    <a href="{{ path('app_recette_edit', {'id': recette.id}) }}">edit</a>
+            <hr class="my-4">
 
-    {{ include('recette/_delete_form.html.twig') }}
+            <!-- Hazırlık ve Pişirme Süreleri -->
+            <div class="flex flex-wrap items-center space-x-8 mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Préparation</h3>
+                    <p class="text-gray-600">{{ recette.tempPreparation }} min</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Cuisson</h3>
+                    <p class="text-gray-600">{{ recette.tempCuisson }} min</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Total</h3>
+                    <p class="text-gray-600 font-bold">{{ recette.tempPreparation + recette.tempCuisson }} min</p>
+                </div>
+            </div>
+
+            <!-- Tarif Açıklaması -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Description</h2>
+                <p class="text-gray-700 leading-relaxed">{{ recette.description }}</p>
+            </div>
+
+            <!-- Malzemeler -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Ingrédients</h2>
+                <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ recette.ingredients }}</p>
+            </div>
+
+            <!-- Hazırlık Aşamaları -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Étapes</h2>
+                <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ recette.etapes }}</p>
+            </div>
+
+            <!-- Eylem Butonları -->
+            <div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 mt-8">
+                <a href="{{ path('app_recette_index') }}" class="w-full md:w-auto text-center bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 transform hover:scale-105">
+                    Retour à la liste
+                </a>
+
+                {% if is_granted('ROLE_ADMIN') or app.user == recette.auteur %}
+                    <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="w-full md:w-auto text-center bg-orange-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 transform hover:scale-105 shadow-md">
+                        Modifier
+                    </a>
+                    {{ include('recette/_delete_form.html.twig') }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

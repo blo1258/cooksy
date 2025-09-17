@@ -1,0 +1,28 @@
+.recette-card {
+    display: flex;
+    flex-direction: column;
+    width: 288px;
+    height: 320px;
+}
+
+.recette-image-container {
+    position: relative;
+}
+
+.recette-image {
+    width: 100%;
+    height: 176px;
+    object-fit: cover;
+}
+
+.duree-icon {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+.like-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}

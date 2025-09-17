@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profilim{% endblock %}
+
+{% block body %}
+    <style>
+        .profile-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; /* Resmin yuvarlak görünmesini sağlar */
+            object-fit: cover; /* Resmin oranını korur */
+            border: 2px solid #f97316; /* Tailwind'deki orange-500 rengine karşılık gelen renk kodu */
+            margin-right:20px;
+        }
+    
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f0f0f0;
+            margin-right: 20px;
+        }
+        .member-since {
+            color: #777;
+            font-size: 14px;
+        }
+        .btn-modifier {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .btn-modifier:hover {
+            background-color: #0056b3;
+        }
+        .section-title {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+            padding-left: 10px;
+        }
+        .recipe-list, .comment-list {
+            display: grid;
+            gap: 20px;
+        }
+        .recipe-item, .comment-item {
+            display: flex;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .recipe-item img, .comment-item img {
+            width: 100px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .recipe-info, .comment-info {
+            flex-grow: 1;
+        }
+        .recipe-info h4, .comment-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .recipe-info a, .comment-info a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .recipe-info a:hover, .comment-info a:hover {
+            text-decoration: underline;
+        }
+        .comment-text {
+            color: #555;
+            font-style: italic;
+        }
+        .comment-rating {
+            color: #ffc107;
+            font-size: 1.2em;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            gap: 20px;
+        }
+        .action-buttons a {
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .btn-change-password {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .btn-delete-account {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a href="{{ path('app_accueil') }}" class="btn btn-secondary">
+            <i class="fas fa-home"></i> Accueil
+        </a>
+    </div>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="user-info">
+                {% if app.user.image is not null %}
+                    <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar border-2 border-orange-500">
+                {% endif %}
+                <div>
+                    <h2>Bienvenue, {{ app.user.nom }}</h2>
+                    <p class="member-since">Membre depuis: {{ app.user.createdAt|date('F Y', 'Europe/Paris') }}</p>
+                </div>
+            </div>
+            <a href="{{ path('app_profil') }}" class="btn-modifier">Modifier</a>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="section-title">📚 Mes recettes publiées</h3>
+            
+        </div>
+        <div class="recipe-list">
+            {% for recette in app.user.recettes %}
+                <div class="recipe-item">
+                    {% if recette.image is not null %}
+                        <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" alt="Recette Resmi">
+                    {% endif %}
+                    <div class="recipe-info">
+                        <h4>{{ recette.titre }}</h4>
+                        <a href="{{ path('app_recette_detail', {id: recette.id}) }}">Voir recette detail</a>
+                    </div>
+                </div>
+            {% else %}
+                <p>Vous n'avez pas encore de recettes publiées.</p>
+            {% endfor %}
+            <div class="action-buttons">
+            <a href="{{ path('app_recette_ajouter') }}" class="btn-change-password">Ajouter une recette</a>
+            </div>
+        </div>
+
+        <h3 class="section-title">⭐ Mes commentaires et notes</h3>
+        <div class="comment-list">
+            {% for commentaire in app.user.getCommentaires %}
+                {% if commentaire.recette is not null %}
+                    <div class="comment-item">
+                        {% if commentaire.recette.image is not null %}
+                            <img src="{{ asset('uploads/recettes/' ~ commentaire.recette.image) }}" alt="Recette Resmi">
+                        {% endif %}
+                        <div class="comment-info">
+                            <h4>{{ commentaire.recette.titre }}</h4>
+                            <p class="comment-text">"{{ commentaire.commentaire }}"</p>
+                        </div>
+                        <div class="comment-rating">
+                            {% for i in 1..commentaire.note %}⭐{% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Vous n'avez pas encore commenté ou noté.</p>
+            {% endfor %}
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ path('app_changer_mot_de_passe') }}" class="btn-change-password">Changer le mot de passe</a>
+            <a href="{{ path('app_supprimer_compte') }}" class="btn-delete-account">Supprimer mon compte</a>
+        </div>
+
+    </div>
+{% endblock %}

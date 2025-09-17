@@ -16,6 +16,7 @@ class AccueilController extends AbstractController
         $recettes = $recetteRepository->findAll();
 
         return $this->render('accueil/index.html.twig', [
+            'controller_name' => 'AccueilController',
             'recettes' => $recettes,
         ]);
     }

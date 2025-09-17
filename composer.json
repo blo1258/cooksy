@@ -1,7 +1,7 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
@@ -11,17 +11,21 @@
         "doctrine/doctrine-bundle": "^2.16",
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.5",
+        "symfony/asset": "7.3.*",
         "symfony/console": "7.3.*",
         "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
         "symfony/form": "7.3.*",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/mailer": "7.3.*",
         "symfony/runtime": "7.3.*",
         "symfony/security-bundle": "7.3.*",
         "symfony/security-csrf": "7.3.*",
         "symfony/twig-bundle": "7.3.*",
         "symfony/validator": "7.3.*",
-        "symfony/yaml": "7.3.*"
+        "symfony/webpack-encore-bundle": "^2.3",
+        "symfony/yaml": "7.3.*",
+        "symfonycasts/verify-email-bundle": "^1.17"
     },
     "config": {
         "allow-plugins": {
@@ -74,6 +78,7 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.1",
         "symfony/maker-bundle": "^1.64"
     }
 }
