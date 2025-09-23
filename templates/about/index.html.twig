@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Conseils et Astuces{% endblock %}
+{% block title %}À propos de Cooksy{% endblock %}
 
 {% block body %}
 <header class="bg-[#2e2e2e] shadow-md">
@@ -23,9 +23,9 @@
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <div class="user-info flex items-center space-x-2">
                     {% if app.user.image %}
-                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar border-2 w-[76px] h-[76px] rounded-full border-orange-500">
+                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar border-2 w-[76px] h-[76px] border-orange-500 rounded-full">
                     {% else %}
-                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500 rounded-full">
                     {% endif %}
                     <a href="{{ path('app_profil') }}" class="text-gray-200 hover:text-orange-600 font-medium">
                         {{ app.user.nom }}
@@ -51,78 +51,36 @@
         <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
     </div>
 </nav>
-
 <main class="bg-[#FF7043] min-h-screen py-8">
     <div class="container mx-auto px-4">
         <h1 class="text-4xl md:text-5xl font-extrabold text-white text-center mb-12">
-            Conseils et Astuces de Cuisine
+            À propos de Cooksy
         </h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- İpucu 1 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                    </svg>
+        <div class="bg-white rounded-xl shadow-lg p-8 md:p-12 text-center max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold text-orange-600 mb-4">Notre Mission</h2>
+            <p class="text-gray-700 leading-relaxed mb-6">
+                Chez Cooksy, notre mission est de vous inspirer et de vous aider à explorer le monde fascinant de la cuisine. Nous croyons que la cuisine est plus qu'un simple acte de préparation ; c'est un moyen de partager des histoires, de créer des souvenirs et de célébrer les saveurs du monde entier.
+            </p>
+            <h2 class="text-3xl font-bold text-orange-600 mb-4">Ce que nous proposons</h2>
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-6 md:space-y-0 md:space-x-6">
+                <div class="bg-gray-100 rounded-lg p-4 flex-1">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Recettes</h3>
+                    <p class="text-gray-600">
+                        Des recettes variées et testées pour tous les niveaux, des débutants aux chefs expérimentés.
+                    </p>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Saler à la dernière minute</h2>
-                <p class="text-gray-600">Pour éviter que la viande ou le poisson ne se dessèche, salez-les juste avant ou pendant la cuisson. Le sel a tendance à retirer l'humidité.</p>
-            </div>
-
-            <!-- İpucu 2 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM15.5 14h-3.5V6H9v8h3.5l-3.5 3.5 3.5 3.5V14h3.5z"/>
-                    </svg>
+                <div class="bg-gray-100 rounded-lg p-4 flex-1">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Conseils</h3>
+                    <p class="text-gray-600">
+                        Des astuces et des techniques de pro pour améliorer vos compétences culinaires.
+                    </p>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Utiliser une planche humide</h2>
-                <p class="text-gray-600">Pour éviter que votre planche à découper ne glisse, placez un essuie-tout ou un chiffon humide en dessous. Cela assurera une meilleure stabilité.</p>
-            </div>
-
-            <!-- İpucu 3 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16 6V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H2v15h20V6h-6zm-4-2h4v2h-4V4zm-4 8v-1.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V12h3V9.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V12h1V8h-2V6h-4V4H7v2H5v2H4V6H2v15h20V6h-6V4h-4z"/>
-                    </svg>
+                <div class="bg-gray-100 rounded-lg p-4 flex-1">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Cuisines</h3>
+                    <p class="text-gray-600">
+                        Un voyage à travers les différentes cultures culinaires du monde.
+                    </p>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Aiguiser vos couteaux</h2>
-                <p class="text-gray-600">Un couteau bien aiguisé est plus sûr qu'un couteau émoussé. Il vous permet de couper avec moins de force, réduisant le risque de dérapage.</p>
-            </div>
-            
-            <!-- İpucu 4 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.41 0 8-3.59 8-8s-3.59-8-8-8-8 3.59-8 8 3.59 8 8 8zm-1-12h2v6h-2v-6zm0 8h2v2h-2v-2z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">La température ambiante</h2>
-                <p class="text-gray-600">Sortez vos ingrédients comme le beurre, le lait ou les œufs du réfrigérateur environ 30 minutes avant de cuisiner. Ils s'intégreront mieux à vos préparations.</p>
-            </div>
-            
-            <!-- İpucu 5 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2c-4.97 0-9 4.03-9 9 0 3.32 1.77 6.2 4.4 7.82L12 22l4.6-2.18C19.23 18.2 21 15.32 21 12c0-4.97-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7 0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Peler une tomate facilement</h2>
-                <p class="text-gray-600">Plongez une tomate quelques secondes dans l'eau bouillante, puis dans l'eau froide. La peau se retirera très facilement.</p>
-            </div>
-
-            <!-- İpucu 6 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm-1-5h2V6h-2v7zm0 2h2v2h-2v-2z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Le poivre fraîchement moulu</h2>
-                <p class="text-gray-600">Moulez votre poivre au dernier moment pour profiter pleinement de son arôme et de sa saveur, qui s'évaporent rapidement après mouture.</p>
             </div>
         </div>
     </div>

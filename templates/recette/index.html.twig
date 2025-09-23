@@ -3,45 +3,193 @@
 {% block title %}Recette index{% endblock %}
 
 {% block body %}
-    <h1>Recette index</h1>
+    <header class="bg-[#2e2e2e] shadow-md">
+        <div class="container mx-auto flex items-center justify-between p-4 flex-wrap">
+            <div class="flex-shrink-0">
+                <a href="{{ path('app_accueil') }}">
+                    <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-20 w-auto">
+                </a>
+            </div>
+            
+            <div class="flex space-x-2 md:space-x-4">
+                {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="user-info flex items-center space-x-2">
+                        <a href="{{ path('app_profil') }}" class="flex-col flex items-center space-x-2 text-gray-200 hover:text-orange-600 font-medium">
+                        {% if app.user.image %}
+                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
+                        {% else %}
+                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                        {% endif %}
+                        
+                        <span>{{ app.user.nom }}</span>
+                        </a>
+                        <a href="{{ path('app_logout') }}" class="relative group">
+                            
+                            <i class="fa-solid fa-right-from-bracket text-2xl text-red-500 group-hover:hidden"></i>
+                            <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">Se déconnecter</span>
+                        </a>
+                    </div>
+                {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
+                    <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <nav class="bg-gray-100 shadow-sm p-4 text-center">
+        <div class="container mx-auto flex justify-center space-x-6">
+            <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
+            <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
+            <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
+            <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+        </div>
+    </nav>
+    <div class="container mx-auto p-4 md:p-8">
+        <h1 class="text-4xl font-bold mb-6 text-gray-800">Toutes les Recettes</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Ingredients</th>
-                <th>Etapes</th>
-                <th>Temp_preparation</th>
-                <th>Temp_cuisson</th>
-                <th>Image</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for recette in recettes %}
-            <tr>
-                <td>{{ recette.id }}</td>
-                <td>{{ recette.titre }}</td>
-                <td>{{ recette.description }}</td>
-                <td>{{ recette.ingredients }}</td>
-                <td>{{ recette.etapes }}</td>
-                <td>{{ recette.tempPreparation }}</td>
-                <td>{{ recette.tempCuisson }}</td>
-                <td>{{ recette.image }}</td>
-                <td>
-                    <a href="{{ path('app_recette_detail', {'id': recette.id}) }}">show</a>
-                    <a href="{{ path('app_recette_edit', {'id': recette.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Arama ve Filtreleme Formu -->
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Rechercher des recettes..." 
+        class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
+    >
 
-    <a href="{{ path('app_recette_ajouter') }}">Create new</a>
+    <div class="relative w-full">
+        <select 
+            id="prepTimeFilter" 
+            class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
+        >
+            <option value="">Temps de préparation</option>
+            <option value="15">Moins de 15 min</option>
+            <option value="30">Moins de 30 min</option>
+            <option value="60">Moins de 60 min</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="relative w-full">
+        <select 
+            id="categoryFilter" 
+            class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
+        >
+            <option value="">Catégories</option>
+            <option value="Plats principaux">Plats Principaux</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Salades">Salades</option>
+            <option value="Petit Dejeuner">Petit Dejeuner</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+
+        <div class="overflow-x-auto bg-white rounded-lg shadow-md p-4">
+            <table class="min-w-full divide-y divide-gray-200" id="recetteTable">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ingredients</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Etapes</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Temps de preparation</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Temps de cuisson</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for recette in recettes %}
+                    <tr class="recette-row" data-prep-time="{{ recette.tempPreparation }}" data-category="{{ recette.categorie.nom|default('') }}">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" alt="{{ recette.titre }}" class="h-12 w-12 object-cover rounded-full">
+                        </td>
+                        <td class="w-[150px] px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.titre }}</td>
+                        <td class="px-6 py-4">
+                            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-gray-700 hover:text-orange-600 hover:underline">
+                                <div class="w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">{{ recette.description }}</div>
+                            </a>
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-gray-700 hover:text-orange-600 hover:underline">
+                                <div class="w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">{{ recette.ingredients }}</div>
+                            </a>
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-gray-700 hover:text-orange-600 hover:underline">
+                                <div class="w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">{{ recette.etapes }}</div>
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.tempPreparation }} min</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.tempCuisson }} min</td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.categorie.nom|default('') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">show</a>
+                            <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="text-orange-600 hover:text-orange-900">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ path('app_recette_ajouter') }}" class="w-12 h-12 inline-flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white rounded-full transition duration-300 transform hover:scale-105 shadow-md group" title="Ajouter nouvelle recette">
+            <!-- SVG icon for "add" -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+    </a>
+</div>
+    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const prepTimeFilter = document.getElementById('prepTimeFilter');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const rows = document.querySelectorAll('.recette-row');
+
+        function filterRecipes() {
+            const searchText = searchInput.value.toLowerCase();
+            const filterTime = prepTimeFilter.value;
+            const filterCategory = categoryFilter.value.toLowerCase();
+
+            rows.forEach(row => {
+                const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const prepTime = parseInt(row.getAttribute('data-prep-time'));
+                const category = row.getAttribute('data-category').toLowerCase();
+                
+                const titleMatch = title.includes(searchText);
+                const timeMatch = filterTime === "" || prepTime < parseInt(filterTime);
+                const categoryMatch = filterCategory === "" || category.includes(filterCategory);
+
+                if (titleMatch && timeMatch && categoryMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', filterRecipes);
+        prepTimeFilter.addEventListener('change', filterRecipes);
+        categoryFilter.addEventListener('change', filterRecipes);
+    });
+</script>
 {% endblock %}

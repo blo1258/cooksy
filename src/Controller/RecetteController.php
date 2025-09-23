@@ -16,10 +16,18 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class RecetteController extends AbstractController
 {
     #[Route('/', name: 'app_recette_index', methods: ['GET'])]
-    public function index(RecetteRepository $recetteRepository): Response
+    public function index(Request $request, RecetteRepository $recetteRepository): Response
     {
+        $query = $request->query->get('q');
+        
+        if ($query) {
+            $recettes = $recetteRepository->findByQuery($query);
+        } else {
+            $recettes = $recetteRepository->findAll();
+        }
+
         return $this->render('recette/index.html.twig', [
-            'recettes' => $recetteRepository->findAll(),
+            'recettes' => $recettes,
         ]);
     }
 

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Conseils et Astuces{% endblock %}
+{% block title %}Cuisines du Monde{% endblock %}
 
 {% block body %}
 <header class="bg-[#2e2e2e] shadow-md">
@@ -55,74 +55,36 @@
 <main class="bg-[#FF7043] min-h-screen py-8">
     <div class="container mx-auto px-4">
         <h1 class="text-4xl md:text-5xl font-extrabold text-white text-center mb-12">
-            Conseils et Astuces de Cuisine
+            Cuisine du Monde
         </h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- İpucu 1 -->
+            <!-- Mutfak 1 -->
             <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Saler à la dernière minute</h2>
-                <p class="text-gray-600">Pour éviter que la viande ou le poisson ne se dessèche, salez-les juste avant ou pendant la cuisson. Le sel a tendance à retirer l'humidité.</p>
+                <img src="https://placehold.co/150x150/FF8C00/FFFFFF?text=FR" alt="Cuisine Française" class="rounded-full mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Française</h2>
+                <p class="text-gray-600">Découvrez les secrets de la cuisine française classique, de la bouillabaisse au coq au vin.</p>
             </div>
 
-            <!-- İpucu 2 -->
+            <!-- Mutfak 2 -->
             <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM15.5 14h-3.5V6H9v8h3.5l-3.5 3.5 3.5 3.5V14h3.5z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Utiliser une planche humide</h2>
-                <p class="text-gray-600">Pour éviter que votre planche à découper ne glisse, placez un essuie-tout ou un chiffon humide en dessous. Cela assurera une meilleure stabilité.</p>
+                <img src="https://placehold.co/150x150/4CAF50/FFFFFF?text=IT" alt="Cuisine Italienne" class="rounded-full mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Italienne</h2>
+                <p class="text-gray-600">Pâtes, pizzas et saveurs du soleil. Plongez dans la richesse des traditions culinaires italiennes.</p>
             </div>
 
-            <!-- İpucu 3 -->
+            <!-- Mutfak 3 -->
             <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16 6V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H2v15h20V6h-6zm-4-2h4v2h-4V4zm-4 8v-1.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V12h3V9.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V12h1V8h-2V6h-4V4H7v2H5v2H4V6H2v15h20V6h-6V4h-4z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Aiguiser vos couteaux</h2>
-                <p class="text-gray-600">Un couteau bien aiguisé est plus sûr qu'un couteau émoussé. Il vous permet de couper avec moins de force, réduisant le risque de dérapage.</p>
+                <img src="https://placehold.co/150x150/B8002D/FFFFFF?text=TR" alt="Cuisine Turque" class="rounded-full mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Turque</h2>
+                <p class="text-gray-600">Voyagez en Turquie avec des plats traditionnels comme le kebab, les mezes et les délices sucrés.</p>
             </div>
             
-            <!-- İpucu 4 -->
+            <!-- Mutfak 4 -->
             <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.41 0 8-3.59 8-8s-3.59-8-8-8-8 3.59-8 8 3.59 8 8 8zm-1-12h2v6h-2v-6zm0 8h2v2h-2v-2z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">La température ambiante</h2>
-                <p class="text-gray-600">Sortez vos ingrédients comme le beurre, le lait ou les œufs du réfrigérateur environ 30 minutes avant de cuisiner. Ils s'intégreront mieux à vos préparations.</p>
-            </div>
-            
-            <!-- İpucu 5 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2c-4.97 0-9 4.03-9 9 0 3.32 1.77 6.2 4.4 7.82L12 22l4.6-2.18C19.23 18.2 21 15.32 21 12c0-4.97-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7 0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Peler une tomate facilement</h2>
-                <p class="text-gray-600">Plongez une tomate quelques secondes dans l'eau bouillante, puis dans l'eau froide. La peau se retirera très facilement.</p>
-            </div>
-
-            <!-- İpucu 6 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <div class="text-orange-500 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm-1-5h2V6h-2v7zm0 2h2v2h-2v-2z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Le poivre fraîchement moulu</h2>
-                <p class="text-gray-600">Moulez votre poivre au dernier moment pour profiter pleinement de son arôme et de sa saveur, qui s'évaporent rapidement après mouture.</p>
+                <img src="https://placehold.co/150x150/007BFF/FFFFFF?text=JP" alt="Cuisine Japonaise" class="rounded-full mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Japonaise</h2>
+                <p class="text-gray-600">Découvrez l'art et la délicatesse des sushis, ramens et autres plats japonais.</p>
             </div>
         </div>
     </div>

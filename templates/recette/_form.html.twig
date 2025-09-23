@@ -1,4 +1,48 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="bg-white p-8 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Creer nouvelle Recette</h1>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="mb-4">
+            {{ form_label(form.categorie, 'Catégorie', {'label_attr': {'class': 'block text-gray-700 text-sm font-bold mb-2'}}) }}
+            {{ form_widget(form.categorie, {'attr': {'class': 'shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+            {{ form_errors(form.categorie) }}
+        </div>
+        
+        <div class="mb-4">
+            {{ form_row(form.titre, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+        </div>
+        <div class="mb-4">
+            {{ form_row(form.description, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32'}}) }}
+        </div>
+        <div class="mb-4">
+            {{ form_row(form.ingredients, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+        </div>
+        <div class="mb-4">
+            {{ form_row(form.etapes, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32'}}) }}
+        </div>
+        <div class="mb-4">
+            {{ form_row(form.tempPreparation, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+        </div>
+        <div class="mb-4">
+            {{ form_row(form.tempCuisson, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+        </div>
+        
+        <div class="mb-4">
+            {{ form_label(form.image, null, {'label_attr': {'class': 'block text-gray-700 text-sm font-bold mb-2'}}) }}
+            <div class="relative flex items-center">
+                <i class="fas fa-camera text-2xl text-gray-500 absolute left-3"></i>
+                {{ form_widget(form.image, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-10'}}) }}
+            </div>
+            {{ form_errors(form.image) }}
+        </div>
+
+        <div class="flex items-center justify-between mt-6">
+            <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors" type="submit">
+                Enregistrer
+            </button>
+            <a href="{{ path('app_recette_index') }}" class="text-gray-600 hover:underline text-2xl">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+    {{ form_end(form) }}
+</div>

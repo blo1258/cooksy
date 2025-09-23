@@ -1,24 +1,93 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}S'inscrire{% endblock %}
 
 {% block body %}
     {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ flash_error }}</span>
+        </div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <div class="min-h-screen flex items-center justify-center bg-[#FF7043] p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg transition-transform transform hover:scale-[1.01] duration-300">
+            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">S'inscrire</h1>
+            
+            {{ form_errors(registrationForm) }}
 
-    {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm, {'attr': {'class': 'space-y-6'}}) }}
+                <div>
+                    {{ form_row(registrationForm.nom, {
+                        label_attr: {'class': 'block text-sm font-medium text-gray-700'},
+                        row_attr: {'class': 'mb-4'},
+                        attr: {'class': 'mt-1 block w-full px-4 py-2 border border-gray-300 rounded-full shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 transition duration-300'}
+                    }) }}
+                </div>
+                <div>
+                    {{ form_row(registrationForm.email, {
+                        label_attr: {'class': 'block text-sm font-medium text-gray-700'},
+                        row_attr: {'class': 'mb-4'},
+                        attr: {'class': 'mt-1 block w-full px-4 py-2 border border-gray-300 rounded-full shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 transition duration-300'}
+                    }) }}
+                </div>
+                <div>
+                    {{ form_row(registrationForm.plainPassword, {
+                        label: 'Mot de passe',
+                        label_attr: {'class': 'block text-sm font-medium text-gray-700'},
+                        row_attr: {'class': 'mb-4'},
+                        attr: {'class': 'mt-1 block w-full px-4 py-2 border border-gray-300 rounded-full shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 transition duration-300'}
+                    }) }}
+                </div>
+                
+                {# Onay kutusu metnin solunda olacak şekilde güncellendi #}
+                <div class="flex items-center space-x-2">
+                    {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500'} }) }}
+                    <label for="registration_form_agreeTerms" class="text-sm text-gray-900">J'accepte tous les termes et conditions.</label>
+                </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.nom) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                {# Profil fotoğrafı yükleme alanı 'S'inscrire' butonunun üstünde #}
+                <div class="mt-4">
+                    {{ form_widget(registrationForm.image, { 'attr': {'class': 'hidden', 'id': 'registration_form_image'} }) }}
+                    <label for="registration_form_image" class="cursor-pointer w-full flex items-center justify-center py-3 px-4 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                        </svg>
+                        <span id="file-name">Aucun fichier sélectionné</span>
+                    </label>
+                </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                <script>
+                    document.getElementById('registration_form_image').addEventListener('change', function(e) {
+                        const fileName = e.target.files[0] ? e.target.files[0].name : 'Aucun fichier sélectionné';
+                        document.getElementById('file-name').textContent = fileName;
+                    });
+                </script>
+
+                <button type="submit" class="cursor-pointer w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-lg font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-300 transform hover:scale-105">
+                    S'inscrire
+                </button>
+            {{ form_end(registrationForm) }}
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600 mb-4">Connectez-vous avec</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-blue-600 transition duration-300">
+                        <svg class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.015 12C22.015 6.477 17.538 2 12.015 2S2 6.477 2 12c0 5.093 3.693 9.351 8.528 10.15V15.75H7.072V12h2.956V9.088c0-2.913 1.776-4.502 4.372-4.502 1.246 0 2.32.092 2.632.133V7.5H16.48c-1.488 0-1.776.708-1.776 1.742V12h3.585l-.575 3.75H14.704v6.401c4.835-.799 8.528-5.057 8.528-10.15z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-900 transition duration-300">
+                        <svg class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.025 2c-5.518 0-10 4.482-10 10 0 5.517 4.482 10 10 10 5.517 0 10-4.483 10-10 0-5.518-4.483-10-10-10zm-1.84 16.592c-1.282.688-2.618.913-4.103.913-2.193 0-4.228-.77-5.83-2.073.01.077.018.15.018.23 0 2.27 1.603 4.153 3.722 4.153 1.24 0 2.396-.54 3.33-1.472l-2.016-1.921zm-2.08-1.572L8.147 13.1c.57.87 1.258 1.623 2.058 2.253l-1.996 1.695zm-.34-2.81c-.503-.923-.787-1.96-.787-3.045 0-2.348 1.13-4.425 2.87-5.632L10.358 6.5C8.91 7.848 8.024 9.4 8.024 11.13c0 1.05.28 2.046.772 2.923zm.39 3.992c1.047.458 2.146.72 3.327.72 1.408 0 2.723-.393 3.917-1.127l-2.14-1.772c-.443-.36-1.02-.375-1.465-.035zM12.025 21.022c.983 0 1.94-.14 2.855-.418l-1.455-1.35c-.44-.41-.44-.925-.015-1.35l2.05-1.958c.84-.81 1.558-1.74 2.15-2.766 1.2-2.1 1.84-4.52 1.84-7.058 0-2.583-1.01-4.996-2.827-6.848l-1.745 1.745c-.417.417-1.093.417-1.51 0l-1.745-1.745C16.892 3.19 19.025 2 21.325 2c.48 0 .95.03 1.41.09L22.75 3.52c.43.08.84.17 1.23.27l-1.63 1.666c-.44.44-.44 1.15 0 1.59l2.76 2.83c.725.753 1.278 1.624 1.708 2.585-.1.02-.19.04-.29.07l-3.21 3.23c-.44.44-.44 1.15 0 1.59l3.24 3.23c.09-.13.17-.26.26-.41l2.58-2.61c.42-.42 1.1-.42 1.52 0l1.73 1.73c-1.322 1.49-3.082 2.65-5.068 3.315z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-red-500 transition duration-300">
+                        <svg class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.025 2c-5.518 0-10 4.482-10 10 0 5.517 4.482 10 10 10 5.517 0 10-4.483 10-10 0-5.518-4.483-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v6h-2v-6zm0 8h2v2h-2v-2z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

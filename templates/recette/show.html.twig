@@ -23,15 +23,16 @@
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <div class="user-info flex items-center space-x-2">
                     {% if app.user.image %}
-                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar border-2 w-[76px] h-[76px] border-orange-500">
+                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Photo" class="profile-avatar w-[77px] h-[77px]">
                     {% else %}
-                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Default Profil Photo" class="profile-avatar border-2 border-orange-500">
                     {% endif %}
                     <a href="{{ path('app_profil') }}" class="text-gray-200 hover:text-orange-600 font-medium">
                         {{ app.user.nom }}
                     </a>
-                    <a href="{{ path('app_logout') }}" class="text-red-500 hover:text-red-600 font-medium">
-                        Se déconnecter
+                    <a href="{{ path('app_logout') }}" class="relative group">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-red-500 group-hover:hidden"></i>
+                        <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">Se déconnecter</span>
                     </a>
                 </div>
             {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
@@ -46,15 +47,16 @@
 <nav class="bg-gray-100 shadow-sm p-4 text-center">
     <div class="container mx-auto flex justify-center space-x-6">
         <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Recettes</a>
-        <a href="#" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Cuisines</a>
-        <a href="{{ path('app_astuces_index') }}" class="text-orange-600 font-semibold transition duration-300">Astuces</a>
-        <a href="#" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">À propos</a>
+        <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Cuisines</a>
+        <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Astuces</a>
+        <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">À propos</a>
     </div>
 </nav>
 
 <main class="container mx-auto p-4 md:p-8">
     <div class="bg-white rounded-lg shadow-xl overflow-hidden md:flex md:flex-col lg:flex-row">
         <!-- Tarif Görseli ve Bilgileri -->
+        {# Resmin boyutunu ve konumunu kontrol eden kısım #}
         <div class="relative w-full lg:w-1/2 h-96 md:h-[500px] lg:h-auto">
             {% if recette.image is not null %}
                 <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
@@ -115,10 +117,50 @@
                     <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="w-full md:w-auto text-center bg-orange-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 transform hover:scale-105 shadow-md">
                         Modifier
                     </a>
-                    {{ include('recette/_delete_form.html.twig') }}
+                    
+                    <button type="button" onclick="showDeleteModal()" class="w-full md:w-auto text-center bg-red-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 transform hover:scale-105 shadow-md cursor-pointer">
+                        Supprimer
+                    </button>
+                    
+                    <form id="deleteForm" action="{{ path('app_recette_delete', {'id': recette.id}) }}" method="POST" style="display: none;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
+                    </form>
                 {% endif %}
             </div>
         </div>
     </div>
 </main>
+
+<!-- Onay Modalı -->
+<div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg p-6 w-96 max-w-full shadow-lg">
+        <div class="text-center">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Confirmation de suppression</h3>
+            <p class="text-gray-600 mb-6">Êtes-vous sûr de vouloir supprimer cette recette ? Cette action est irréversible.</p>
+            <div class="flex justify-center space-x-4">
+                <button type="button" onclick="hideDeleteModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition duration-300">
+                    Annuler
+                </button>
+                <button type="button" onclick="confirmDelete()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function hideDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    function confirmDelete() {
+        document.getElementById('deleteForm').submit();
+    }
+</script>
 {% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Gérer les commentaires{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background-color: #FF7043;
+        }
+    </style>
+
+    <div class="container mx-auto p-6 max-w-7xl mt-10 bg-white rounded-lg shadow-lg">
+         <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-orange-500 pl-3">Gérer les commentaires</h1>
+            <a href="{{ path('app_admin_index') }}" class="inline-block px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-600 transition duration-300">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border-collapse">
+                <thead>
+                    <tr class="bg-gray-200 text-left text-sm font-semibold text-gray-700">
+                        <th class="py-3 px-4 border-b border-gray-300">Commentaire</th>
+                        <th class="py-3 px-4 border-b border-gray-300">User</th>
+                        <th class="py-3 px-4 border-b border-gray-300">Recettes</th>
+                        <th class="py-3 px-4 border-b border-gray-300">Not</th>
+                        <th class="py-3 px-4 border-b border-gray-300 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for commentaire in commentaires %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-4 px-4 text-gray-700">{{ commentaire.commentaire }}</td>
+                            <td class="py-4 px-4 text-gray-700">{{ commentaire.user.nom }}</td>
+                            <td class="py-4 px-4 text-gray-700">{{ commentaire.recette.titre }}</td>
+                            <td class="py-4 px-4 text-yellow-400">
+                                {% for i in 1..commentaire.note %}⭐{% endfor %}
+                            </td>
+                            <td class="py-4 px-4 text-right">
+                                <a href="#" class="text-red-500 hover:underline">Supprimer</a>
+                                <a href="#" class="ml-2 text-blue-500 hover:underline">Valider</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="py-4 px-4 text-center text-gray-500">Aucun commentaire.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

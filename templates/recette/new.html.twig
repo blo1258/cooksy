@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Recette{% endblock %}
+{% block title %}Nouvelle Recette{% endblock %}
 
 {% block body %}
-    <h1>Create new Recette</h1>
-
-    {{ include('recette/_form.html.twig') }}
-
-    <a href="{{ path('app_recette_index') }}">back to list</a>
+    <style>
+        body {
+            background-color: #FF7043;
+        }
+    </style>
+    <div class="container mx-auto p-6 max-w-lg mt-10">
+        {{ include('recette/_form.html.twig') }}
+    </div>
 {% endblock %}
