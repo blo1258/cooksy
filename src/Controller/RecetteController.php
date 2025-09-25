@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Recette;
 use App\Form\RecetteType;
 use App\Repository\RecetteRepository;
+use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,10 +76,17 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_recette_detail', methods: ['GET'])]
-    public function show(Recette $recette): Response
+    public function show(Recette $recette, CommentaireRepository $commentaireRepository): Response
     {
+        // Bu tarifin yorumlarını al
+        $commentaires = $commentaireRepository->findBy(
+        ['recette' => $recette],
+        ['createdAt' => 'DESC'] // en yeni yorum en üstte
+        );
+
         return $this->render('recette/show.html.twig', [
             'recette' => $recette,
+            'commentaires' => $commentaires,
         ]);
     }
 

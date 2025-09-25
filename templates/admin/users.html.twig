@@ -2,12 +2,116 @@
 
 {% block title %}Admin - Gérer les utilisateurs{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
 {% block body %}
-    <style>
+    
+       <style>
+        .tooltip-text {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .group:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+    
+
         body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            background-color: #2d3748; /* bg-gray-800 */
+            color: #ffffff;
+            height: 100vh;
+        }
+        .sidebar a {
+            transition: all 0.3s ease;
+        }
+        .sidebar a:hover {
+            background-color: #4a5568; /* bg-gray-700 */
+        }
+        .sidebar .active {
             background-color: #FF7043;
+            font-weight: bold;
         }
     </style>
+<div class="flex">
+    <div class="sidebar w-64 p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-8 border-b-2 border-orange-500 pb-2">Admin Panel</h2>
+
+            <!-- Admin Bilgileri -->
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="flex justify-center items-center w-full ">
+                <div class="user-info flex items-center space-x-2 mb-8">
+                    <a href="{{ path('app_profil') }}" class="flex flex-col items-center text-gray-200 hover:text-orange-600 font-medium">
+                        {% if app.user.image %}
+                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profile photo" class="profile-avatar w-[76px] h-[76px] rounded-full object-cover border-2 border-orange-500">
+                        {% else %}
+                            <img src="https://placehold.co/76x76/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] rounded-full border-2 border-orange-500">
+                        {% endif %}
+                        <span>{{ app.user.nom }}</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <nav>
+                <a href="{{ path('app_admin_index') }}" class="flex items-center px-4 py-3 ">
+                    <i class="fas fa-chart-line mr-3"></i>
+                    Tableau de Bord
+                </a>
+                <a href="{{ path('app_admin_users') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700 rounded-lg active">
+                    <i class="fas fa-users-cog mr-3"></i>
+                    Gérer les utilisateurs
+                </a>
+                <a href="{{ path('app_admin_recettes') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-utensils mr-3"></i>
+                    Gérer les recettes
+                </a>
+                <a href="{{ path('app_admin_commentaires') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-comments mr-3"></i>
+                    Gérer les commentaires
+                </a>
+                <a href="{{ path('app_logout') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    Déconnexion
+                </a>
+                <a href="{{ path('app_accueil') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-home mr-3"></i>
+                    Retour à l'accueil
+                </a>
+            </nav>
+        </div>
+
+         
 
     <div class="container mx-auto p-6 max-w-7xl mt-10 bg-white rounded-lg shadow-lg">
         <div class="flex justify-between items-center mb-6">
@@ -17,37 +121,47 @@
             </a>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border-collapse">
-                <thead>
-                    <tr class="bg-gray-200 text-left text-sm font-semibold text-gray-700">
-                        <th class="py-3 px-4 border-b border-gray-300">ID</th>
-                        <th class="py-3 px-4 border-b border-gray-300">Nom</th>
-                        <th class="py-3 px-4 border-b border-gray-300">Email</th>
-                        <th class="py-3 px-4 border-b border-gray-300">Rôles</th>
-                        <th class="py-3 px-4 border-b border-gray-300 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for u in utilisateurs %}
-                        <tr class="border-b border-gray-200 hover:bg-gray-50">
-                            <td class="py-4 px-4 text-gray-700">{{ u.id }}</td>
-                            <td class="py-4 px-4 text-gray-700">{{ u.nom }}</td>
-                            <td class="py-4 px-4 text-gray-700">{{ u.email }}</td>
-                            <td class="py-4 px-4 text-gray-700">{{ u.roles|join(', ') }}</td>
-                            <td class="py-4 px-4 text-right">
-                                <a href="{{ path('app_admin_users_supprimer', {'id': u.id}) }}" class="text-red-500 hover:underline">Supprimer</a>
-                                <a href="{{ path('app_admin_users_changer_role', {'id': u.id}) }}" class="ml-2 text-blue-500 hover:underline">Changer rôle</a>
-                                <a href="{{ path('app_admin_users_valider', {'id': u.id}) }}" class="ml-2 text-green-500 hover:underline">Valider</a>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="5" class="py-4 px-4 text-center text-gray-500">Personne !</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <div class="overflow-x-hidden">
+    <table class="min-w-full bg-white border-collapse table-fixed">
+        <thead>
+            <tr class="bg-gray-200 text-left text-sm font-semibold text-gray-700">
+                <th class="py-3 px-4 border-b border-gray-300 w-[5%]">ID</th>
+                <th class="py-3 px-4 border-b border-gray-300 w-[20%]">Nom</th>
+                <th class="py-3 px-4 border-b border-gray-300 w-[30%]">Email</th>
+                <th class="py-3 px-4 border-b border-gray-300 w-[15%]">Rôles</th>
+                <th class="py-3 px-4 border-b border-gray-300 text-right w-[20%]">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in utilisateurs %}
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                    <td class="py-4 px-4 text-gray-700 w-[5%] overflow-hidden truncate">{{ u.id }}</td>
+                    <td class="py-4 px-4 text-gray-700 w-[20%] overflow-hidden truncate">{{ u.nom }}</td>
+                    <td class="py-4 px-4 text-gray-700 w-[30%] overflow-hidden truncate">{{ u.email }}</td>
+                    <td class="py-4 px-4 text-gray-700 w-[15%] overflow-hidden truncate">{{ u.roles|join(', ') }}</td>
+                    <td class="py-4 px-4 text-right whitespace-nowrap w-[20%]">
+                        <a href="{{ path('app_admin_users_supprimer', {'id': u.id}) }}" class="text-red-500 hover:text-red-700 transition-colors duration-200 relative group">
+                            <i class="fas fa-trash-alt"></i>
+                            <span class="tooltip-text">Supprimer</span>
+                        </a>
+                        <a href="{{ path('app_admin_users_changer_role', {'id': u.id}) }}" class="ml-4 text-blue-500 hover:text-blue-700 transition-colors duration-200 relative group">
+                            <i class="fas fa-user-edit"></i>
+                            <span class="tooltip-text">Changer rôle</span>
+                        </a>
+                        <a href="{{ path('app_admin_users_valider', {'id': u.id}) }}" class="ml-4 text-green-500 hover:text-green-700 transition-colors duration-200 relative group">
+                            <i class="fas fa-check-circle"></i>
+                            <span class="tooltip-text">Valider</span>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="py-4 px-4 text-center text-gray-500">Personne !</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    </div>
     </div>
 {% endblock %}

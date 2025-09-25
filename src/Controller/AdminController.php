@@ -36,8 +36,18 @@ class AdminController extends AbstractController
     #[Route('/admin', name: 'app_admin_index')]
     public function index(): Response
     {
+        $totalUtilisateurs = $this->utilisateurRepository->count([]);
+        $totalRecettes = $this->recetteRepository->count([]);
+        $totalCommentaires = $this->commentaireRepository->count([]);
+        $dernieresRecettes = $this->recetteRepository->findBy([], ['id' => 'DESC'], 5);
+        $recettesAttente = $this->recetteRepository->count(['attente' => true]);
+
         return $this->render('admin/index.html.twig', [
-            'user' => $this->getUser(),
+            'totalUtilisateurs' => $totalUtilisateurs,
+            'totalRecettes' => $totalRecettes,
+            'totalCommentaires' => $totalCommentaires,
+            'dernieresRecettes' => $dernieresRecettes,
+            'recettesAttente' => $recettesAttente,
         ]);
     }
 
@@ -130,5 +140,42 @@ public function modifierRecette(int $id, RecetteRepository $recetteRepository): 
     // İlk etapta basit test için sadece id gösterelim:
     return new Response("Page de modification pour la recette #".$recette->getId());
 }
+
+#[Route('/admin/recettes/attente', name: 'app_admin_recettes_attente')]
+public function recettesEnAttente(): Response
+{
+    $recettes = $this->recetteRepository->findBy(['attente' => true]);
+
+    return $this->render('admin/recettes_attente.html.twig', [
+        'recettes' => $recettes,
+    ]);
+}
+
+#[Route('/admin/recette/{id}/valider', name: 'app_admin_valider_recette')]
+public function validerRecette(int $id): Response
+{
+    $recette = $this->recetteRepository->find($id);
+
+    if ($recette) {
+        $recette->setAttente(false); // artık onaylandı
+        $this->entityManager->flush();
+    }
+
+    return $this->redirectToRoute('app_admin_recettes_attente');
+}
+
+#[Route('/admin/recette/{id}/refuser', name: 'app_admin_refuser_recette')]
+public function refuserRecette(int $id): Response
+{
+    $recette = $this->recetteRepository->find($id);
+
+    if ($recette) {
+        $this->entityManager->remove($recette); // tamamen sil
+        $this->entityManager->flush();
+    }
+
+    return $this->redirectToRoute('app_admin_recettes_attente');
+}
+
 
 }

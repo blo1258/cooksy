@@ -29,6 +29,9 @@ class Commentaire
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $note = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -47,6 +50,18 @@ class Commentaire
     public function setContenu(string $contenu): static
     {
         $this->contenu = $contenu;
+
+        return $this;
+    }
+
+    public function getNote(): ?int
+    {
+        return $this->note;
+    }
+
+    public function setNote(?int $note): static
+    {
+        $this->note = $note;
 
         return $this;
     }

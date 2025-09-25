@@ -82,7 +82,7 @@
                         {% endif %}
                         <div class="flex-grow">
                             <h4 class="font-semibold text-gray-800">{{ commentaire.recette.titre }}</h4>
-                            <p class="text-gray-600 italic">"{{ commentaire.commentaire }}"</p>
+                            <p class="text-gray-600 italic">"{{ commentaire.contenu }}"</p>
                         </div>
                         <div class="text-yellow-400 text-xl">
                             {% for i in 1..commentaire.note %}⭐{% endfor %}

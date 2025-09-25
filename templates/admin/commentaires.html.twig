@@ -5,9 +5,72 @@
 {% block body %}
     <style>
         body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            background-color: #2d3748; /* bg-gray-800 */
+            color: #ffffff;
+            height: 100vh;
+        }
+        .sidebar a {
+            transition: all 0.3s ease;
+        }
+        .sidebar a:hover {
+            background-color: #4a5568; /* bg-gray-700 */
+        }
+        .sidebar .active {
             background-color: #FF7043;
+            font-weight: bold;
         }
     </style>
+<div class="flex">
+    <div class="sidebar w-64 p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-8 border-b-2 border-orange-500 pb-2">Admin Panel</h2>
+
+            <!-- Admin Bilgileri -->
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="flex justify-center items-center w-full ">
+                <div class="user-info flex items-center space-x-2 mb-8">
+                    <a href="{{ path('app_profil') }}" class="flex flex-col items-center text-gray-200 hover:text-orange-600 font-medium">
+                        {% if app.user.image %}
+                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profile photo" class="profile-avatar w-[76px] h-[76px] rounded-full object-cover border-2 border-orange-500">
+                        {% else %}
+                            <img src="https://placehold.co/76x76/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] rounded-full border-2 border-orange-500">
+                        {% endif %}
+                        <span>{{ app.user.nom }}</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <nav>
+                <a href="{{ path('app_admin_index') }}" class="flex items-center px-4 py-3 ">
+                    <i class="fas fa-chart-line mr-3"></i>
+                    Tableau de Bord
+                </a>
+                <a href="{{ path('app_admin_users') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-users-cog mr-3"></i>
+                    Gérer les utilisateurs
+                </a>
+                <a href="{{ path('app_admin_recettes') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-utensils mr-3"></i>
+                    Gérer les recettes
+                </a>
+                <a href="{{ path('app_admin_commentaires') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700 rounded-lg active">
+                    <i class="fas fa-comments mr-3"></i>
+                    Gérer les commentaires
+                </a>
+                <a href="{{ path('app_logout') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    Déconnexion
+                </a>
+                <a href="{{ path('app_accueil') }}" class="flex items-center px-4 py-3 rounded-lg mt-2 hover:bg-gray-700">
+                    <i class="fas fa-home mr-3"></i>
+                    Retour à l'accueil
+                </a>
+            </nav>
+        </div>
 
     <div class="container mx-auto p-6 max-w-7xl mt-10 bg-white rounded-lg shadow-lg">
          <div class="flex justify-between items-center mb-6">
@@ -24,22 +87,30 @@
                         <th class="py-3 px-4 border-b border-gray-300">Commentaire</th>
                         <th class="py-3 px-4 border-b border-gray-300">User</th>
                         <th class="py-3 px-4 border-b border-gray-300">Recettes</th>
-                        <th class="py-3 px-4 border-b border-gray-300">Not</th>
+                        <th class="py-3 px-4 border-b border-gray-300">Note</th>
                         <th class="py-3 px-4 border-b border-gray-300 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for commentaire in commentaires %}
                         <tr class="border-b border-gray-200 hover:bg-gray-50">
-                            <td class="py-4 px-4 text-gray-700">{{ commentaire.commentaire }}</td>
-                            <td class="py-4 px-4 text-gray-700">{{ commentaire.user.nom }}</td>
+                            <td class="py-4 px-4 text-gray-700">{{ commentaire.contenu }}</td>
+                            <td class="py-4 px-4 text-gray-700">{{ commentaire.utilisateur.nom }}</td>
                             <td class="py-4 px-4 text-gray-700">{{ commentaire.recette.titre }}</td>
                             <td class="py-4 px-4 text-yellow-400">
-                                {% for i in 1..commentaire.note %}⭐{% endfor %}
+                                {% if commentaire.note is not null %}
+                                    {% for i in 1..commentaire.note %}⭐{% endfor %}
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
-                            <td class="py-4 px-4 text-right">
-                                <a href="#" class="text-red-500 hover:underline">Supprimer</a>
-                                <a href="#" class="ml-2 text-blue-500 hover:underline">Valider</a>
+                            <td class="py-4 px-4 text-right whitespace-nowrap">
+                                <a href="#" class="text-red-500 hover:text-red-700 mx-1" title="Supprimer le commentaire">
+                                    <i class="fas fa-trash-alt text-xl"></i>
+                                </a>
+                                <a href="#" class="text-green-500 hover:text-green-700 mx-1" title="Valider le commentaire">
+                                    <i class="fas fa-check-circle text-xl"></i>
+                                </a>
                             </td>
                         </tr>
                     {% else %}
@@ -51,4 +122,5 @@
             </table>
         </div>
     </div>
+</div>
 {% endblock %}

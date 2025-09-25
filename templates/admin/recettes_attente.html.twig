@@ -1,0 +1,23 @@
+<h1 class="text-2xl font-bold mb-6">Recettes en attente</h1>
+
+<table class="w-full border border-gray-300">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="px-4 py-2">Titre</th>
+            <th class="px-4 py-2">Auteur</th>
+            <th class="px-4 py-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for recette in recettes %}
+            <tr class="border-b">
+                <td class="px-4 py-2">{{ recette.titre }}</td>
+                <td class="px-4 py-2">{{ recette.utilisateur.nom }}</td>
+                <td class="px-4 py-2">
+                    <a href="{{ path('app_admin_valider_recette', {'id': recette.id}) }}" class="text-green-500 hover:underline">Valider</a>
+                    <a href="{{ path('app_admin_refuser_recette', {'id': recette.id}) }}" class="text-red-500 hover:underline ml-2">Refuser</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

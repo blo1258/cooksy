@@ -15,3 +15,12 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+Ignore recipe images
+/public/uploads/recettes/
+
+Ignore user images
+/public/uploads/utilisateur-*.png
+
+Ignore other uploads
+/public/uploads/

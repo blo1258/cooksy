@@ -55,6 +55,20 @@ class Recette
     #[ORM\ManyToOne(inversedBy: 'recettes')]
     private ?Categorie $categorie = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $attente = true;
+
+    public function isAttente(): bool
+    {
+        return $this->attente;
+    }
+
+public function setAttente(bool $attente): self
+{
+    $this->attente = $attente;
+    return $this;
+}
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();

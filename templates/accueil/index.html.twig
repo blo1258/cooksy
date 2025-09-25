@@ -41,14 +41,22 @@
                         {% if app.user.image %}
                             <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
                         {% else %}
-                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
                         {% endif %}
                         
                         <span>{{ app.user.nom }}</span>
                     </a>
-                    <a href="{{ path('app_logout') }}" class="text-red-500 hover:text-red-600 font-medium">
-                        Se déconnecter
-                    </a>
+                    <div class="flex flex-col">
+                        <a href="{{ path('app_logout') }}" class="text-red-500 hover:text-red-600 font-medium">
+                            Se déconnecter
+                        </a>
+                        {# Eğer kullanıcı admin ise, admin paneline gitmek için bir bağlantı göster #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_admin_index') }}" class="text-blue-500 hover:text-blue-600 font-medium">
+                                Panneau d'administration
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
             {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
             {% else %}
@@ -75,13 +83,17 @@
 
     <div class="flex flex-wrap gap-6 justify-center">
         {% for recette in recettes %}
-            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="bg-white rounded shadow hover:shadow-lg transition cursor-pointer group flex flex-col w-[280px]">
+            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" 
+                   class="bg-white rounded shadow transition-transform duration-300 ease-in-out transform hover:scale-105 
+                   hover:-translate-y-2 hover:shadow-xl cursor-pointer group flex flex-col w-[280px]">
+
                 
+                <!-- Resim -->
                 <div class="relative w-full h-[172px]">
                     {% if recette.image is not null %}
                         <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
-                            alt="{{ recette.titre }}" 
-                            class="w-full h-full object-cover rounded-t">
+                             alt="{{ recette.titre }}" 
+                             class="w-full h-full object-cover rounded-t">
                     {% endif %}
 
                     <div class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs font-bold py-1 px-2 rounded">
@@ -94,16 +106,44 @@
                     </div>
                 </div>
 
-                <div class="p-2 recette-info flex flex-col gap-2">
-                    <h3 class="font-bold text-gray-800">{{ recette.titre }}</h3>
+                <!-- Bilgi -->
+                <div class="p-2 recette-info flex flex-col gap-1">
+                    <h3 class="font-bold text-gray-800 text-base">{{ recette.titre }}</h3>
+                    <div class="flex items-center justify-between">
+                    <!-- Yazar -->
                     <p class="text-sm text-gray-600">par {{ recette.auteur.nom }}</p>
+                    <!-- Yıldızlar -->
+                    <div class="flex items-center space-x-2">
+                        {% set totalRating = 0 %}
+                        {% set ratingCount = 0 %}
+                        {% for commentaire in recette.commentaires %}
+                            {% if commentaire.note is not null %}
+                                {% set totalRating = totalRating + commentaire.note %}
+                                {% set ratingCount = ratingCount + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set averageRating = ratingCount > 0 ? (totalRating / ratingCount)|round(1) : 0 %}
+
+                        <span class="text-yellow-400 text-sm">
+                            {% for i in 1..5 %}
+                                {% if averageRating >= i %}
+                                    <i class="fas fa-star"></i>
+                                {% elseif averageRating > i - 1 and averageRating < i %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% else %}
+                                    <i class="far fa-star text-gray-400"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+                </div>
+                    
                 </div>
             </a>
         {% endfor %}
     </div>
-
-
 </main>
+
 
 
 
