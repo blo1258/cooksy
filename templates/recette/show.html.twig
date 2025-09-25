@@ -2,6 +2,10 @@
 
 {% block title %}Recette | {{ recette.titre }}{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
 {% block body %}
 <header class="bg-[#2e2e2e] shadow-md">
     <div class="container mx-auto flex items-center justify-between p-4 flex-wrap">
@@ -19,23 +23,22 @@
             </button>
         </div>
         <div class="flex space-x-2 md:space-x-4">
-            {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <div class="user-info flex items-center space-x-2">
-                    {% if app.user.image %}
-                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Photo" class="profile-avatar w-[77px] h-[77px]">
-                    {% else %}
-                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Default Profil Photo" class="profile-avatar border-2 border-orange-500">
-                    {% endif %}
-                    <a href="{{ path('app_profil') }}" class="text-gray-200 hover:text-orange-600 font-medium">
-                        {{ app.user.nom }}
+                    <a href="{{ path('app_profil') }}" class="flex-col flex items-center space-x-2 text-gray-200 hover:text-orange-600 font-medium">
+                        {% if app.user.image %}
+                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
+                        {% else %}
+                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                        {% endif %}
+                        
+                        <span>{{ app.user.nom }}</span>
                     </a>
                     <a href="{{ path('app_logout') }}" class="relative group">
                         <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-red-500 group-hover:hidden"></i>
                         <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">Se déconnecter</span>
                     </a>
                 </div>
-            {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
             {% else %}
                 <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
                 <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
@@ -43,7 +46,6 @@
         </div>
     </div>
 </header>
-<!-- Yeni Menü -->
 <nav class="bg-gray-100 shadow-sm p-4 text-center">
     <div class="container mx-auto flex justify-center space-x-6">
         <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Recettes</a>
@@ -54,81 +56,179 @@
 </nav>
 
 <main class="container mx-auto p-4 md:p-8">
-    <div class="bg-white rounded-lg shadow-xl overflow-hidden md:flex md:flex-col lg:flex-row">
-        <!-- Tarif Görseli ve Bilgileri -->
-        {# Resmin boyutunu ve konumunu kontrol eden kısım #}
-        <div class="relative w-full lg:w-1/2 h-96 md:h-[500px] lg:h-auto">
-            {% if recette.image is not null %}
-                <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
-                     alt="{{ recette.titre }}" 
-                     class="w-full h-full object-cover rounded-t-lg lg:rounded-r-none lg:rounded-l-lg">
-            {% endif %}
-        </div>
-
-        <!-- Tarif Detayları -->
-        <div class="p-6 md:p-8 w-full lg:w-1/2">
-            <!-- Başlık ve Yazar -->
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ recette.titre }}</h1>
-            <p class="text-sm text-gray-600 mb-4">par <span class="font-medium text-orange-600">{{ recette.auteur.nom }}</span></p>
-
-            <hr class="my-4">
-
-            <!-- Hazırlık ve Pişirme Süreleri -->
-            <div class="flex flex-wrap items-center space-x-8 mb-6">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Préparation</h3>
-                    <p class="text-gray-600">{{ recette.tempPreparation }} min</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Cuisson</h3>
-                    <p class="text-gray-600">{{ recette.tempCuisson }} min</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Total</h3>
-                    <p class="text-gray-600 font-bold">{{ recette.tempPreparation + recette.tempCuisson }} min</p>
-                </div>
-            </div>
-
-            <!-- Tarif Açıklaması -->
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Description</h2>
-                <p class="text-gray-700 leading-relaxed">{{ recette.description }}</p>
-            </div>
-
-            <!-- Malzemeler -->
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Ingrédients</h2>
-                <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ recette.ingredients }}</p>
-            </div>
-
-            <!-- Hazırlık Aşamaları -->
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Étapes</h2>
-                <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ recette.etapes }}</p>
-            </div>
-
-            <!-- Eylem Butonları -->
-            <div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 mt-8">
-                <a href="{{ path('app_recette_index') }}" class="w-full md:w-auto text-center bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 transform hover:scale-105">
-                    Retour à la liste
-                </a>
-
-                {% if is_granted('ROLE_ADMIN') or app.user == recette.auteur %}
-                    <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="w-full md:w-auto text-center bg-orange-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 transform hover:scale-105 shadow-md">
-                        Modifier
-                    </a>
-                    
-                    <button type="button" onclick="showDeleteModal()" class="w-full md:w-auto text-center bg-red-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 transform hover:scale-105 shadow-md cursor-pointer">
-                        Supprimer
-                    </button>
-                    
-                    <form id="deleteForm" action="{{ path('app_recette_delete', {'id': recette.id}) }}" method="POST" style="display: none;">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
-                    </form>
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+        <div class="md:flex md:flex-col lg:flex-row">
+            <!-- Tarif Görseli -->
+            <div class="relative w-full lg:w-1/2 h-96 md:h-[526px] lg:h-[324px]">
+                {% if recette.image is not null %}
+                    <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
+                        alt="{{ recette.titre }}" 
+                        class="w-full h-full object-cover rounded-t-lg lg:rounded-r-none lg:rounded-l-lg">
                 {% endif %}
+    
+                <!-- Yorumlar ve Not Bölümü -->
+        <div class="bg-white p-6 md:p-8">
+            <!-- Ortalama Not -->
+            <div class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between mb-8">
+                <h3 class="text-lg font-semibold text-gray-800">Note moyenne</h3>
+                <div class="flex items-center space-x-2">
+                    {% set totalRating = 0 %}
+                    {% set ratingCount = 0 %}
+                    {% for commentaire in commentaires %}
+                        {% if commentaire.note is not null %}
+                            {% set totalRating = totalRating + commentaire.note %}
+                            {% set ratingCount = ratingCount + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set averageRating = ratingCount > 0 ? (totalRating / ratingCount)|round(1) : 0 %}
+                    <span class="text-yellow-400 text-sm">
+                        {#
+                            Bu döngü, toplamda 5 yıldıza ulaşana kadar
+                            her bir yıldıza hangi sınıfı (tam, yarım, boş)
+                            vereceğine karar veriyor.
+                        #}
+                        {% for i in 1..5 %}
+                            {% if averageRating >= i %}
+                                {# Tam yıldız #}
+                                <i class="fas fa-star"></i>
+                            {% elseif averageRating > i - 1 and averageRating < i %}
+                                {# Yarım yıldız #}
+                                <i class="fas fa-star-half-alt"></i>
+                            {% else %}
+                                {# Boş yıldız #}
+                                <i class="far fa-star text-gray-400"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <span class="text-gray-700 font-medium">
+                        {{ averageRating }} / 5 ({{ ratingCount }} votes)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Yorumlar -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-between">
+                    <span>Commentaires ({{ commentaires|length }})</span>
+                </h2>
+
+                <!-- Yorum Yazma Formu -->
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-md">
+                        <p class="mb-2 text-sm text-gray-600">
+                            Commentez et donnez une note avec votre nom d'utilisateur :
+                            <span class="font-semibold text-orange-600">{{ app.user.nom }}</span>
+                        </p>
+                        <form action="{{ path('app_commentaire_add', {'id': recette.id}) }}" method="POST">
+                            <div class="flex items-center space-x-1 mb-4">
+                                <span class="text-gray-700 font-medium">Votre note:</span>
+                                <div id="star-rating" class="flex items-center space-x-1">
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="1"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="2"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="3"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="4"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="5"></i>
+                                </div>
+                                <input type="hidden" name="note" id="note-input" value="">
+                            </div>
+                            <textarea name="contenu" rows="3"
+                                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                        placeholder="Écrivez votre commentaire..."></textarea>
+                            <button type="submit"
+                                    class="mt-3 bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300">
+                                Envoyer
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <p class="text-gray-600 mb-6">👉 <a href="{{ path('app_login') }}" class="text-orange-600 hover:underline">Connectez-vous</a> pour commenter.</p>
+                {% endif %}
+
+                <!-- Yorum Listesi -->
+                <div class="space-y-4">
+                    {% for commentaire in commentaires %}
+                        <div class="border border-gray-200 rounded-lg p-4 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-semibold text-gray-800">{{ commentaire.utilisateur.nom }}</span>
+                                    {% if commentaire.note is not null %}
+                                        <div class="text-yellow-400">
+                                            {% for i in 1..commentaire.note %}
+                                                <i class="fas fa-star"></i>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <span class="text-sm text-gray-500">{{ commentaire.createdAt|date('d/m/Y H:i') }}</span>
+                            </div>
+                            <p class="text-gray-700">{{ commentaire.contenu }}</p>
+                        </div>
+                    {% else %}
+                        <p class="text-gray-600 italic">Aucun commentaire pour le moment.</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
+    </div>
+            
+            <!-- Tarif Detayları -->
+            <div class="p-6 md:p-8 w-full lg:w-1/2">
+                <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ recette.titre }}</h1>
+                <p class="text-sm text-gray-600 mb-4">par <span class="font-medium text-orange-600">{{ recette.auteur.nom }}</span></p>
+
+                <hr class="my-4">
+
+                <div class="flex flex-wrap items-center space-x-8 mb-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Préparation</h3>
+                        <p class="text-gray-600">{{ recette.tempPreparation }} min</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Cuisson</h3>
+                        <p class="text-gray-600">{{ recette.tempCuisson }} min</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Total</h3>
+                        <p class="text-gray-600 font-bold">{{ recette.tempPreparation + recette.tempCuisson }} min</p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Description</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ recette.description }}</p>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Ingrédients</h2>
+                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ recette.ingredients }}</p>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Étapes</h2>
+                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ recette.etapes }}</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 mt-8">
+                    <a href="{{ path('app_recette_index') }}" class="w-full md:w-auto text-center bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 transform hover:scale-105">
+                        Retour à la liste
+                    </a>
+                    {% if is_granted('ROLE_ADMIN') or app.user == recette.auteur %}
+                        <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="w-full md:w-auto text-center bg-orange-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 transform hover:scale-105 shadow-md">
+                            Modifier
+                        </a>
+                        <button type="button" onclick="showDeleteModal()" class="w-full md:w-auto text-center bg-red-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 transform hover:scale-105 shadow-md cursor-pointer">
+                            Supprimer
+                        </button>
+                        <form id="deleteForm" action="{{ path('app_recette_delete', {'id': recette.id}) }}" method="POST" style="display: none;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        
     </div>
 </main>
 
@@ -162,5 +262,42 @@
     function confirmDelete() {
         document.getElementById('deleteForm').submit();
     }
+
+    const starContainer = document.getElementById('star-rating');
+    const stars = starContainer.querySelectorAll('i');
+    const noteInput = document.getElementById('note-input');
+    let currentRating = 0;
+
+    function fillStars(rating) {
+        stars.forEach(star => {
+            const starValue = parseInt(star.dataset.value);
+            if (starValue <= rating) {
+                star.classList.add('fas', 'text-yellow-400');
+                star.classList.remove('far', 'text-gray-400');
+            } else {
+                star.classList.add('far', 'text-gray-400');
+                star.classList.remove('fas', 'text-yellow-400');
+            }
+        });
+    }
+
+    starContainer.addEventListener('mouseover', (e) => {
+        if (e.target.tagName === 'I') {
+            const hoverValue = parseInt(e.target.dataset.value);
+            fillStars(hoverValue);
+        }
+    });
+
+    starContainer.addEventListener('mouseout', () => {
+        fillStars(currentRating);
+    });
+
+    starContainer.addEventListener('click', (e) => {
+        if (e.target.tagName === 'I') {
+            currentRating = parseInt(e.target.dataset.value);
+            noteInput.value = currentRating;
+            fillStars(currentRating);
+        }
+    });
 </script>
 {% endblock %}
