@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Entity\Utilisateur;
+use App\Entity\Recette; // Recette Entity'nizin yolu
+use App\Form\RecetteType; // Mevcut Form Type'ınızın yolu
+use Symfony\Component\HttpFoundation\Request; // Form isteğini yakalamak için
 
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
@@ -77,11 +81,26 @@ class AdminController extends AbstractController
         return new RedirectResponse($urlGenerator->generate('app_admin_users'));
     }
     
-    #[Route('/admin/users/changer-role/{id}', name: 'app_admin_users_changer_role')]
-    public function changerRoleUtilisateur(int $id): Response
+    #[Route('/{id}/changer-role', name: 'app_admin_users_changer_role', methods: ['GET'])]
+    public function changerRole(Utilisateur $utilisateur): Response
     {
-        // La logique de changement de rôle ira ici
-        return new Response("Page de changement de rôle (en construction)");
+        // Mevcut rolleri alır
+        $roles = $utilisateur->getRoles();
+        
+        // Basit bir geçiş mantığı uygulayalım: ROLE_ADMIN varsa kaldır, yoksa ekle.
+        if (in_array('ROLE_ADMIN', $roles)) {
+            $roles = array_diff($roles, ['ROLE_ADMIN']);
+            $this->addFlash('success', sprintf('%s Le rôle déditeur de lutilisateur a été SUPPRIMÉ.', $utilisateur->getNom()));
+        } else {
+            $roles[] = 'ROLE_ADMIN';
+            $this->addFlash('success', sprintf('%s Rôle déditeur AJOUTÉ à lutilisateur nommé.', $utilisateur->getNom()));
+        }
+
+        $utilisateur->setRoles(array_unique($roles)); // Tekrar eden rollerden kaçınmak için
+        $this->entityManager->flush();
+
+        // Kullanıcı listesine geri yönlendir
+        return $this->redirectToRoute('app_admin_users');
     }
 
     #[Route('/admin/users/valider/{id}', name: 'app_admin_users_valider')]
@@ -127,19 +146,37 @@ public function supprimerRecette(int $id, RecetteRepository $recetteRepository, 
     return $this->redirectToRoute('app_admin_recettes');
 }
 
-#[Route('/admin/recettes/modifier/{id}', name: 'app_admin_recette_modifier')]
-public function modifierRecette(int $id, RecetteRepository $recetteRepository): Response
-{
-    $recette = $recetteRepository->find($id);
+#[Route('/admin/recettes/modifier/{id}', name: 'app_admin_recette_modifier', methods: ['GET', 'POST'])]
+    public function modifierRecette(Request $request, Recette $recette): Response
+    {
+        // Mevcut RecetteType form sınıfını kullanarak formu oluştur
+        $form = $this->createForm(RecetteType::class, $recette);
+        
+        // Gelen isteği forma bağla (GET veya POST)
+        $form->handleRequest($request);
 
-    if (!$recette) {
-        throw $this->createNotFoundException('Recette non trouvée.');
+        // Form gönderilmiş ve geçerli ise
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Reçete güncellendiği için bekleyen (attente) durumunu kaldır
+            // Bu, admin onayı anlamına gelir.
+            $recette->setAttente(false); 
+
+            // Değişiklikleri veritabanına kaydet
+            $this->entityManager->flush(); 
+
+            $this->addFlash('success', 'La recette a été modifiée et approuvée par l\'administrateur.');
+
+            // Reçete listesine geri dön
+            return $this->redirectToRoute('app_admin_recettes');
+        }
+
+        // Formu, mevcut şablonunuzu kullanarak render et
+        return $this->render('recette/edit.html.twig', [
+            'recette' => $recette,
+            'form' => $form->createView(), // Twig için form nesnesini hazırlar
+        ]);
     }
-
-    // Burada normalde bir FormType kullanarak düzenleme yapılır.
-    // İlk etapta basit test için sadece id gösterelim:
-    return new Response("Page de modification pour la recette #".$recette->getId());
-}
 
 #[Route('/admin/recettes/attente', name: 'app_admin_recettes_attente')]
 public function recettesEnAttente(): Response

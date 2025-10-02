@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background-color: #FF7043;
+        }
+    </style>
+    <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg max-w-lg mt-10">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Demander une réinitialisation du mot de passe</h1>
+        
+        <!-- 
+            NOT: Gerçek uygulamada, Symfony Form bileşenini kullanarak 
+            bu formu oluşturmanız ve post edilmesini sağlamanız gerekir.
+            Şimdilik, formun görünümünü sağlıyoruz.
+        -->
+        <form method="post" action="#"> 
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Entrez votre adresse email</label>
+                <input type="email" name="email" id="email" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                       required placeholder="exemple@cooksy.com">
+            </div>
+            
+            <div class="flex items-center justify-between mt-6">
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-lg font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-300 transform hover:scale-105 cursor-pointer">
+                    Envoyer le lien de réinitialisation
+                </button>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="{{ path('app_login') }}" class="text-sm text-gray-500 hover:text-gray-700">
+                    ← Retour à la page de connexion
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

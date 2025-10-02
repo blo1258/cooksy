@@ -43,48 +43,104 @@
     </div>
 </header>
 <!-- Yeni Menü -->
-<nav class="bg-gray-100 shadow-sm p-4 text-center">
-    <div class="container mx-auto flex justify-center space-x-6">
-        <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
-        <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
-        <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
-        <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+<nav class="bg-gray-300 shadow-sm p-4 relative">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="hidden md:!flex space-x-6 justify-center items-center w-full">
+            <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
+            <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
+            <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
+            <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+            <a href="{{ path('app_contact_index') }}" class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Contact</a>
+        </div>
+
+        <!-- Burger Menü Butonu (sadece mobilde) -->
+        <div class="relative md:hidden ml-auto group">
+            <button id="burger-btn" class="md:hidden ml-auto text-gray-700 text-2xl focus:outline-none cursor-pointer">
+                <i class="fas fa-bars"></i>
+            </button>
+    
+
+    <!-- Mobile Menü: Konumlandırma sorununu gidermek için bu div'i ana nav div'inin dışına taşıdık. -->
+            <div id="mobile-menu" class="hidden group-hover:flex absolute right-0 top-full mt-2 bg-white shadow-lg rounded-md flex-col space-y-2 p-3 w-40 z-50">
+                <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Recettes</a>
+                <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Cuisines</a>
+                <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Astuces</a>
+                <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">À propos</a>
+                <a href="{{ path('app_contact_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Contact</a>
+            </div>
+        </div>
     </div>
 </nav>
 
 <main class="bg-[#FF7043] min-h-screen py-8">
-    <div class="container mx-auto px-4">
+    <div class="max-w-screen-lg mx-auto px-4">
         <h1 class="text-4xl md:text-5xl font-extrabold text-white text-center mb-12">
             Cuisine du Monde
         </h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
             <!-- Mutfak 1 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <img src="https://placehold.co/150x150/FF8C00/FFFFFF?text=FR" alt="Cuisine Française" class="rounded-full mb-4">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Française</h2>
-                <p class="text-gray-600">Découvrez les secrets de la cuisine française classique, de la bouillabaisse au coq au vin.</p>
+            <div class="bg-white rounded-xl shadow-xl p-6 flex items-center justify-between gap-4 
+                    transition duration-300 transform hover:scale-[1.03] hover:shadow-2xl ">
+            
+            <!-- 1. SOL BLOK: Küçük Logo, Başlık ve Metin (DİKEY YERLEŞİM) -->
+            <!-- flex-1 ile sol alanın esnek olmasını, flex-col ile içeriklerin alt alta dizilmesini sağladık. -->
+            <div class="flex-1 flex flex-col items-start text-left pr-4">
+                
+                <!-- Küçük Mutfak Logosu -->
+                <img src="https://placehold.co/80x80/54A0F4/FFFFFF?text=FR" 
+                     alt="Cuisine Française Logo" class="rounded-full w-20 h-20 object-cover mb-3">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-1 leading-tight">Cuisine Française</h2>
+                
+                <p class="text-gray-600 text-sm">Découvrez les secrets de la cuisine française classique, de la bouillabaisse au coq au vin.</p>
             </div>
 
+            <!-- 2. SAĞ BLOK: Büyük Yemek İmajı -->
+            <div class="flex-shrink-4">
+                <img src="/images/gastrofran.jpg" alt="gastrofran" class="rounded-lg w-90 h-90 shadow-md">
+            </div>
+                 
+        </div>
+
             <!-- Mutfak 2 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <img src="https://placehold.co/150x150/4CAF50/FFFFFF?text=IT" alt="Cuisine Italienne" class="rounded-full mb-4">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Italienne</h2>
-                <p class="text-gray-600">Pâtes, pizzas et saveurs du soleil. Plongez dans la richesse des traditions culinaires italiennes.</p>
+            <div class="bg-white rounded-xl shadow-xl p-6 flex items-center justify-between gap-4 
+                    transition duration-300 transform hover:scale-[1.03] hover:shadow-2xl ">
+                <div class="flex-1 flex flex-col items-start text-left pr-4">
+                    <img src="https://placehold.co/150x150/4CAF50/FFFFFF?text=IT" alt="Cuisine Italienne" class="rounded-full mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Italienne</h2>
+                    <p class="text-gray-600">Pâtes, pizzas et saveurs du soleil. Plongez dans la richesse des traditions culinaires italiennes.</p>
+                </div>
+                    <div class="flex-shrink-4">
+                        <img src="/images/italian-cuisine.jpg" alt="italian-cuisine" class="rounded-lg w-90 h-90 shadow-md">
+                    </div>
+            
             </div>
 
             <!-- Mutfak 3 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <img src="https://placehold.co/150x150/B8002D/FFFFFF?text=TR" alt="Cuisine Turque" class="rounded-full mb-4">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Turque</h2>
-                <p class="text-gray-600">Voyagez en Turquie avec des plats traditionnels comme le kebab, les mezes et les délices sucrés.</p>
+            <div class="bg-white rounded-xl shadow-xl p-6 flex items-center justify-between gap-4 
+                    transition duration-300 transform hover:scale-[1.03] hover:shadow-2xl ">
+                <div class="flex-1 flex flex-col items-start text-left pr-4">
+                    <img src="https://placehold.co/150x150/B8002D/FFFFFF?text=TR" alt="Cuisine Turque" class="rounded-full mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Turque</h2>
+                    <p class="text-gray-600">Voyagez en Turquie avec des plats traditionnels comme le kebab, les mezes et les délices sucrés.</p>
+                </div>
+                    <div class="flex-shrink-4">
+                        <img src="/images/gastroturque.webp" alt="turque-cuisine" class="rounded-lg w-90 h-90 shadow-md">
+                    </div>
+            
             </div>
             
             <!-- Mutfak 4 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition duration-300 transform hover:scale-105">
-                <img src="https://placehold.co/150x150/007BFF/FFFFFF?text=JP" alt="Cuisine Japonaise" class="rounded-full mb-4">
+        <div class="bg-white rounded-xl shadow-xl p-6 flex items-center justify-between gap-4 
+                    transition duration-300 transform hover:scale-[1.03] hover:shadow-2xl ">
+            <div class="flex-1 flex flex-col items-start text-left pr-4">                <img src="https://placehold.co/150x150/007BFF/FFFFFF?text=JP" alt="Cuisine Japonaise" class="rounded-full mb-4">
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Cuisine Japonaise</h2>
                 <p class="text-gray-600">Découvrez l'art et la délicatesse des sushis, ramens et autres plats japonais.</p>
+            </div>
+                <div class="flex-shrink-4">
+                    <img src="/images/gastrojapon.jpg" alt="japon-cuisine" class="rounded-lg w-90 h-90 shadow-md">
+                </div>
+            
             </div>
         </div>
     </div>
@@ -130,4 +186,20 @@
         </div>
     </div>
 </footer>
+<script>
+const burgerBtn = document.getElementById("burger-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+// Menü aç/kapa
+burgerBtn.addEventListener("click", () => {
+  mobileMenu.classList.toggle("hidden");
+});
+
+// Ekran genişleyince (md ve üstü) mobil menüyü otomatik kapat
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 768) {
+    mobileMenu.classList.add("hidden");
+  }
+});
+</script>
 {% endblock %}

@@ -43,12 +43,30 @@
     </div>
 </header>
 <!-- Yeni Menü -->
-<nav class="bg-gray-100 shadow-sm p-4 text-center">
-    <div class="container mx-auto flex justify-center space-x-6">
+<nav class="bg-gray-300 shadow-sm p-4 relative">
+    <div class="hidden md:!flex space-x-6 justify-center items-center w-full">
         <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
         <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
         <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
         <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+        <a href="{{ path('app_contact_index') }}" class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Contact</a>
+    </div>
+    <!-- Burger Menü Butonu (sadece mobilde) -->
+        <div class="relative md:hidden ml-auto group">
+            <button id="burger-btn" class="md:hidden ml-auto text-gray-700 text-2xl focus:outline-none cursor-pointer">
+                <i class="fas fa-bars"></i>
+            </button>
+    
+
+    <!-- Mobile Menü: Konumlandırma sorununu gidermek için bu div'i ana nav div'inin dışına taşıdık. -->
+            <div id="mobile-menu" class="hidden group-hover:flex absolute right-0 top-full mt-2 bg-white shadow-lg rounded-md flex-col space-y-2 p-3 w-40 z-50">
+                <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Recettes</a>
+                <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Cuisines</a>
+                <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Astuces</a>
+                <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">À propos</a>
+                <a href="{{ path('app_contact_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Contact</a>
+            </div>
+        </div>
     </div>
 </nav>
 <main class="bg-[#FF7043] min-h-screen py-8">

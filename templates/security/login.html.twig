@@ -5,7 +5,8 @@
 {% block body %}
     <style>
         body {
-            background-color: #FF7043;
+            /* Tailwind'de 'bg-orange-500' gibi kullanmak daha doğru olsa da, inline stilinizi koruyorum. */
+            background-color: #FF7043; 
         }
     </style>
     <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg max-w-lg mt-10">
@@ -22,9 +23,44 @@
                 <label for="inputEmail" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
                 <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required autofocus>
             </div>
+            
+            <!-- Şifre Alanı ve Göz İkonu -->
             <div class="mb-4">
                 <label for="inputPassword" class="block text-gray-700 text-sm font-bold mb-2">Mot de passe</label>
-                <input type="password" name="_password" id="inputPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <div class="relative">
+                    <input type="password" name="_password" id="inputPassword" class="shadow appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    
+                    <!-- Göz İkonu Düğmesi -->
+                    <button type="button" id="togglePassword" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer hover:text-orange-500 transition duration-150">
+                        <svg id="eye-open" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: block;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <svg id="eye-closed" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7 1.274-4.057 5.065-7 9.542-7 .478 0 .947.032 1.403.099m.371 1.764c1.134.195 2.227.472 3.255.845A10.05 10.05 0 0121.542 12c-1.274 4.057-5.065 7-9.542 7a9.965 9.965 0 01-2.992-.416M6.41 6.41L17.59 17.59M12 15a3 3 0 100-6 3 3 0 000 6z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- "Se souvenir de moi" ve "J'ai oublié le mot de passe" bölümü eklendi -->
+            <div class="flex items-center justify-between mb-6">
+                <!-- Se souvenir de moi (Beni Hatırla) -->
+                <div class="flex items-center">
+                    <input id="remember_me" name="_remember_me" type="checkbox" class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded">
+                    <label for="remember_me" class="ml-2 block text-sm text-gray-900">
+                        Se souvenir de moi
+                    </label>
+                </div>
+
+                <!-- J'ai oublié le mot de passe (Şifremi Unuttum) -->
+                <!-- 
+                    NOT: 'app_forgot_password' rotasının uygulamanızda tanımlı olması gerekir. 
+                    Tanımlı değilse burayı '#' olarak bırakabilir veya rotayı oluşturabilirsiniz.
+                -->
+                <a href="{{ path('app_forgot_password') }}" class="text-sm font-medium text-orange-600 hover:text-orange-500">
+                    J'ai oublié le mot de passe ?
+                </a>
             </div>
             
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -36,4 +72,31 @@
             </div>
         </form>
     </div>
+
+    <!-- JavaScript Fonksiyonu -->
+    <script>
+        /**
+         * Şifre alanının tipini (password/text) ve ikonun görünürlüğünü değiştirir.
+         */
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('inputPassword');
+            const eyeOpen = document.getElementById('eye-open');
+            const eyeClosed = document.getElementById('eye-closed');
+
+            if (passwordInput.type === 'password') {
+                // Şifreyi göster
+                passwordInput.type = 'text';
+                eyeOpen.style.display = 'none';
+                eyeClosed.style.display = 'block';
+            } else {
+                // Şifreyi gizle
+                passwordInput.type = 'password';
+                eyeOpen.style.display = 'block';
+                eyeClosed.style.display = 'none';
+            }
+            
+            // Kullanıcı odağını tekrar input'a verir
+            passwordInput.focus();
+        }
+    </script>
 {% endblock %}

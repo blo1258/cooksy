@@ -38,36 +38,56 @@
             </div>
         </div>
     </header>
-    <nav class="bg-gray-100 shadow-sm p-4 text-center">
-        <div class="container mx-auto flex justify-center space-x-6">
-            <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
-            <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
-            <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
-            <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+    <nav class="bg-gray-300 shadow-sm p-4 relative">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="hidden md:!flex space-x-6 justify-center items-center w-full">
+                <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
+                <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
+                <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
+                <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+                <a href="{{ path('app_contact_index') }}" class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Contact</a>
+            </div>
+
+         <!-- Burger Menü Butonu (sadece mobilde) -->
+            <div class="relative md:hidden ml-auto group">
+                <button id="burger-btn" class="md:hidden ml-auto text-gray-700 text-2xl focus:outline-none cursor-pointer">
+                    <i class="fas fa-bars"></i>
+                </button>
+    
+
+    <!-- Mobile Menü: Konumlandırma sorununu gidermek için bu div'i ana nav div'inin dışına taşıdık. -->
+                <div id="mobile-menu" class="hidden group-hover:flex absolute right-0 top-full mt-2 bg-white shadow-lg rounded-md flex-col space-y-2 p-3 w-40 z-50">
+                    <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Recettes</a>
+                    <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Cuisines</a>
+                    <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Astuces</a>
+                    <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">À propos</a>
+                    <a href="{{ path('app_contact_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Contact</a>
+                </div>
+            </div>
         </div>
     </nav>
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container md:p-2">
         <h1 class="text-4xl font-bold mb-6 text-gray-800">Toutes les Recettes</h1>
 
         <!-- Arama ve Filtreleme Formu -->
-        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-    <input 
-        type="text" 
-        id="searchInput" 
-        placeholder="Rechercher des recettes..." 
-        class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
-    >
-
-    <div class="relative w-full">
-        <select 
-            id="prepTimeFilter" 
-            class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
+        <div class="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Rechercher des recettes..." 
+            class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
         >
+
+        <div class="relative w-full">
+            <select 
+                id="prepTimeFilter" 
+                class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
+            >
             <option value="">Temps de préparation</option>
             <option value="15">Moins de 15 min</option>
             <option value="30">Moins de 30 min</option>
             <option value="60">Moins de 60 min</option>
-        </select>
+            </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
@@ -76,16 +96,16 @@
     </div>
 
     <div class="relative w-full">
-        <select 
-            id="categoryFilter" 
-            class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
-        >
-            <option value="">Catégories</option>
-            <option value="Plats principaux">Plats Principaux</option>
-            <option value="Dessert">Dessert</option>
-            <option value="Salades">Salades</option>
-            <option value="Petit Dejeuner">Petit Dejeuner</option>
-        </select>
+            <select 
+                id="categoryFilter" 
+                class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
+            >
+                <option value="">Catégories</option>
+                <option value="Plats principaux">Plats Principaux</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Salades">Salades</option>
+                <option value="Petit Dejeuner">Petit Dejeuner</option>
+            </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
@@ -107,16 +127,18 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Temps de preparation</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Temps de cuisson</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                 {% for recette in recettes %}
                     <tr class="recette-row" data-prep-time="{{ recette.tempPreparation }}" data-category="{{ recette.categorie.nom|default('') }}">
                         <td class="px-6 py-4 whitespace-nowrap">
+                            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-gray-700 hover:text-orange-600 hover:underline">
                             <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" alt="{{ recette.titre }}" class="h-12 w-12 object-cover rounded-full">
                         </td>
-                        <td class="w-[150px] px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.titre }}</td>
+                        <td class="w-[150px] px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-gray-700 hover:text-orange-600 hover:underline">
+                                {{ recette.titre }}</td>
                         <td class="px-6 py-4">
                             <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-gray-700 hover:text-orange-600 hover:underline">
                                 <div class="w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">{{ recette.description }}</div>
@@ -135,10 +157,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.tempPreparation }} min</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.tempCuisson }} min</td>
                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ recette.categorie.nom|default('') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">show</a>
-                            <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="text-orange-600 hover:text-orange-900">edit</a>
-                        </td>
+                        
                     </tr>
                 {% else %}
                     <tr>
@@ -160,36 +179,70 @@
     </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        const prepTimeFilter = document.getElementById('prepTimeFilter');
-        const categoryFilter = document.getElementById('categoryFilter');
-        const rows = document.querySelectorAll('.recette-row');
+    const searchInput = document.getElementById('searchInput');
+    const prepTimeFilter = document.getElementById('prepTimeFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const rows = document.querySelectorAll('.recette-row');
 
-        function filterRecipes() {
-            const searchText = searchInput.value.toLowerCase();
-            const filterTime = prepTimeFilter.value;
-            const filterCategory = categoryFilter.value.toLowerCase();
+    function filterRecipes() {
+        const searchText = searchInput.value.toLowerCase().trim();
+        const filterTime = prepTimeFilter.value;
+        const filterCategory = categoryFilter.value.toLowerCase();
 
-            rows.forEach(row => {
-                const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                const prepTime = parseInt(row.getAttribute('data-prep-time'));
-                const category = row.getAttribute('data-category').toLowerCase();
+        rows.forEach(row => {
+            // İkinci sütun (Titre) içeriğini al
+            const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            const prepTime = parseInt(row.getAttribute('data-prep-time'));
+            const category = row.getAttribute('data-category').toLowerCase();
+            
+            // 1. Yeni Arama Mantığı: Başlığın ilk 3 kelimesiyle eşleşme kontrolü
+            let titleMatch = false;
+
+            if (searchText === "") {
+                // Arama kutusu boşsa, başlık her zaman eşleşir
+                titleMatch = true;
+            } else {
+                // Başlık kelimelere ayrılır ve gereksiz boşluklar/noktalama işaretleri temizlenir.
+                const titleWords = title.split(/\s+/).filter(word => word.length > 0);
                 
-                const titleMatch = title.includes(searchText);
-                const timeMatch = filterTime === "" || prepTime < parseInt(filterTime);
-                const categoryMatch = filterCategory === "" || category.includes(filterCategory);
+                // Sadece ilk 3 kelimeyi kontrol et
+                const wordsToCheck = titleWords.slice(0, 3);
+                
+                // Arama metni, bu kelimelerin herhangi birinin başlangıcıyla eşleşiyor mu?
+                titleMatch = wordsToCheck.some(word => word.startsWith(searchText));
+            }
+            // -------------------------------------------------------------
 
-                if (titleMatch && timeMatch && categoryMatch) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
+            const timeMatch = filterTime === "" || prepTime < parseInt(filterTime);
+            const categoryMatch = filterCategory === "" || category.includes(filterCategory);
 
-        searchInput.addEventListener('input', filterRecipes);
-        prepTimeFilter.addEventListener('change', filterRecipes);
-        categoryFilter.addEventListener('change', filterRecipes);
-    });
+            if (titleMatch && timeMatch && categoryMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', filterRecipes);
+    prepTimeFilter.addEventListener('change', filterRecipes);
+    categoryFilter.addEventListener('change', filterRecipes);
+});
+
+const burgerBtn = document.getElementById("burger-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+// Menü aç/kapa
+burgerBtn.addEventListener("click", () => {
+  mobileMenu.classList.toggle("hidden");
+});
+
+// Ekran genişleyince (md ve üstü) mobil menüyü otomatik kapat
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 768) {
+    mobileMenu.classList.add("hidden");
+  }
+});
+
 </script>
 {% endblock %}

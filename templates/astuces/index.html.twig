@@ -3,6 +3,8 @@
 {% block title %}Conseils et Astuces{% endblock %}
 
 {% block body %}
+{# ÖNEMLİ: Bu sayfanın doğru çalışması için, Font Awesome CSS kütüphanesini (i class="fas fa-bars" kullandığınız için) base.html.twig dosyanızın <head> bölümüne eklediğinizden emin olun. #}
+
 <header class="bg-[#2e2e2e] shadow-md">
     <div class="container mx-auto flex items-center justify-between p-4 flex-wrap">
         <div class="flex-shrink-0">
@@ -25,7 +27,7 @@
                     {% if app.user.image %}
                         <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar border-2 w-[76px] h-[76px] rounded-full border-orange-500">
                     {% else %}
-                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                        <img src="https://placehold.co/76x76/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500 rounded-full">
                     {% endif %}
                     <a href="{{ path('app_profil') }}" class="text-gray-200 hover:text-orange-600 font-medium">
                         {{ app.user.nom }}
@@ -42,13 +44,53 @@
         </div>
     </div>
 </header>
+
 <!-- Yeni Menü -->
-<nav class="bg-gray-100 shadow-sm p-4 text-center">
-    <div class="container mx-auto flex justify-center space-x-6">
-        <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
-        <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
-        <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
-        <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+<nav class="bg-gray-300 shadow-sm p-4 relative">
+    <div class="container mx-auto flex justify-between items-center">
+
+    
+        
+        <!-- Desktop Menü: MD ekranlarda görünür -->
+        <div class="hidden md:!flex space-x-6 justify-center items-center w-full">
+            <a href="{{ path('app_recette_index') }}" 
+               class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">
+                Recettes
+            </a>
+            <a href="{{ path('app_cuisines_index') }}" 
+               class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">
+                Cuisines
+            </a>
+            <a href="{{ path('app_astuces_index') }}" 
+               class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">
+                Astuces
+            </a>
+            <a href="{{ path('app_about_index') }}" 
+               class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">
+                À propos
+            </a>
+            <a href="{{ path('app_contact_index') }}" 
+               class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">
+                Contact
+            </a>
+        </div>
+
+        <!-- Burger Menü Butonu (sadece mobilde) -->
+        <div class="relative md:hidden ml-auto group">
+            <button id="burger-btn" class="md:hidden ml-auto text-gray-700 text-2xl focus:outline-none cursor-pointer">
+                <i class="fas fa-bars"></i>
+            </button>
+    
+
+    <!-- Mobile Menü: Konumlandırma sorununu gidermek için bu div'i ana nav div'inin dışına taşıdık. -->
+            <div id="mobile-menu" class="hidden group-hover:flex absolute right-0 top-full mt-2 bg-white shadow-lg rounded-md flex-col space-y-2 p-3 w-40 z-50">
+                <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Recettes</a>
+                <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Cuisines</a>
+                <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Astuces</a>
+                <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">À propos</a>
+                <a href="{{ path('app_contact_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Contact</a>
+            </div>
+        </div>
     </div>
 </nav>
 
@@ -136,17 +178,19 @@
             <a href="{{ path('app_cuisines_index') }}" class="hover:text-orange-500 transition duration-300">Cuisines</a>
             <a href="{{ path('app_astuces_index') }}" class="hover:text-orange-500 transition duration-300">Astuces</a>
             <a href="{{ path('app_about_index') }}" class="hover:text-orange-500 transition duration-300">À propos</a>
+            <a href="{{ path('app_contact_index') }}" class="hover:text-orange-500 transition duration-300">Contact</a>
         </div>
 
         <hr class="border-gray-700 mb-6">
 
         <!-- Logo, Slogan ve Sosyal Medya İkonları -->
-        <div class="flex md:flex-row items-center justify-between mb-6">
-            <div class="flex-1 text-center md:text-left">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+            <div class="flex-1 text-center md:text-left mb-4 md:mb-0">
                 <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-16 mx-auto md:mx-0">
                 <p class="text-sm mt-2 text-gray-400">Cooksy — Partagez vos recettes préférées 🍲</p>
             </div>
-            <div class="flex-1 flex justify-center md:justify-end space-x-4 mt-4 md:mt-0">
+            <div class="flex-1 flex justify-center md:justify-end space-x-4">
+                {# Buradaki sosyal medya ikonları için de Font Awesome gereklidir! #}
                 <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
                     <i class="fab fa-facebook-f text-2xl"></i>
                 </a>
@@ -168,4 +212,20 @@
         </div>
     </div>
 </footer>
+<script>
+const burgerBtn = document.getElementById("burger-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+// Menü aç/kapa
+burgerBtn.addEventListener("click", () => {
+  mobileMenu.classList.toggle("hidden");
+});
+
+// Ekran genişleyince (md ve üstü) mobil menüyü otomatik kapat
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 768) {
+    mobileMenu.classList.add("hidden");
+  }
+});
+</script>
 {% endblock %}

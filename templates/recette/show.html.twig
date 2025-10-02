@@ -55,22 +55,18 @@
     </div>
 </nav>
 
-<main class="container mx-auto p-4 md:p-8">
+<main class="container bg-[#FF7043] mx-8 p-4 md:p-8">
     <div class="bg-white rounded-lg shadow-xl overflow-hidden">
         <div class="md:flex md:flex-col lg:flex-row">
             <!-- Tarif Görseli -->
-            <div class="relative w-full lg:w-1/2 h-96 md:h-[526px] lg:h-[324px]">
+            <div class="relative w-full h-auto md:md:h-auto lg:h-[624px]">
                 {% if recette.image is not null %}
                     <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
                         alt="{{ recette.titre }}" 
                         class="w-full h-full object-cover rounded-t-lg lg:rounded-r-none lg:rounded-l-lg">
                 {% endif %}
-    
-                <!-- Yorumlar ve Not Bölümü -->
-        <div class="bg-white p-6 md:p-8">
-            <!-- Ortalama Not -->
-            <div class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between mb-8">
-                <h3 class="text-lg font-semibold text-gray-800">Note moyenne</h3>
+
+                <div class=" p-1 flex items-center justify-between mb-8 ml-auto w-fit">
                 <div class="flex items-center space-x-2">
                     {% set totalRating = 0 %}
                     {% set ratingCount = 0 %}
@@ -81,7 +77,7 @@
                         {% endif %}
                     {% endfor %}
                     {% set averageRating = ratingCount > 0 ? (totalRating / ratingCount)|round(1) : 0 %}
-                    <span class="text-yellow-400 text-sm">
+                    <span class="text-yellow-400 text-xl">
                         {#
                             Bu döngü, toplamda 5 yıldıza ulaşana kadar
                             her bir yıldıza hangi sınıfı (tam, yarım, boş)
@@ -106,97 +102,51 @@
                 </div>
             </div>
 
-            <!-- Yorumlar -->
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-between">
-                    <span>Commentaires ({{ commentaires|length }})</span>
-                </h2>
+                <div class="container mx-auto">
+                <div class="px-4 py-4 md:px-6 md:py-6">
+                <!-- Tarif Başlığı ve Yazar -->
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">{{ recette.titre }}</h1>
+                    <p class="text-sm text-gray-600 mb-4">par <span class="font-medium text-orange-600">{{ recette.auteur.nom }}</span></p>
 
-                <!-- Yorum Yazma Formu -->
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-md">
-                        <p class="mb-2 text-sm text-gray-600">
-                            Commentez et donnez une note avec votre nom d'utilisateur :
-                            <span class="font-semibold text-orange-600">{{ app.user.nom }}</span>
-                        </p>
-                        <form action="{{ path('app_commentaire_add', {'id': recette.id}) }}" method="POST">
-                            <div class="flex items-center space-x-1 mb-4">
-                                <span class="text-gray-700 font-medium">Votre note:</span>
-                                <div id="star-rating" class="flex items-center space-x-1">
-                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="1"></i>
-                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="2"></i>
-                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="3"></i>
-                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="4"></i>
-                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="5"></i>
-                                </div>
-                                <input type="hidden" name="note" id="note-input" value="">
+                    <hr class="my-4">
+                
+                    <!-- Süreler ve ikonlar -->
+                    <div class="flex flex-wrap items-center space-x-8 mb-6">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl text-orange-500">⏳</span>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Préparation</h3>
+                                <p class="text-gray-600">{{ recette.tempPreparation }} min</p>
                             </div>
-                            <textarea name="contenu" rows="3"
-                                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
-                                        placeholder="Écrivez votre commentaire..."></textarea>
-                            <button type="submit"
-                                    class="mt-3 bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300">
-                                Envoyer
-                            </button>
-                        </form>
-                    </div>
-                {% else %}
-                    <p class="text-gray-600 mb-6">👉 <a href="{{ path('app_login') }}" class="text-orange-600 hover:underline">Connectez-vous</a> pour commenter.</p>
-                {% endif %}
-
-                <!-- Yorum Listesi -->
-                <div class="space-y-4">
-                    {% for commentaire in commentaires %}
-                        <div class="border border-gray-200 rounded-lg p-4 shadow-sm">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-semibold text-gray-800">{{ commentaire.utilisateur.nom }}</span>
-                                    {% if commentaire.note is not null %}
-                                        <div class="text-yellow-400">
-                                            {% for i in 1..commentaire.note %}
-                                                <i class="fas fa-star"></i>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <span class="text-sm text-gray-500">{{ commentaire.createdAt|date('d/m/Y H:i') }}</span>
-                            </div>
-                            <p class="text-gray-700">{{ commentaire.contenu }}</p>
                         </div>
-                    {% else %}
-                        <p class="text-gray-600 italic">Aucun commentaire pour le moment.</p>
-                    {% endfor %}
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl text-orange-500">🔥</span>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Cuisson</h3>
+                                <p class="text-gray-600">{{ recette.tempCuisson }} min</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl text-orange-500">⏱️</span>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Total</h3>
+                                <p class="text-gray-600 font-bold">{{ recette.tempPreparation + recette.tempCuisson }} min</p>
+                            </div>
+                        </div>
+                    </div>
+
+                        <!-- Tarif açıklaması -->
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">Description</h2>
+                            <p class="text-gray-700 leading-relaxed">{{ recette.description }}</p>
+                        </div>
+                </div>
                 </div>
             </div>
-        </div>
-    </div>
             
             <!-- Tarif Detayları -->
             <div class="p-6 md:p-8 w-full lg:w-1/2">
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ recette.titre }}</h1>
-                <p class="text-sm text-gray-600 mb-4">par <span class="font-medium text-orange-600">{{ recette.auteur.nom }}</span></p>
-
-                <hr class="my-4">
-
-                <div class="flex flex-wrap items-center space-x-8 mb-6">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Préparation</h3>
-                        <p class="text-gray-600">{{ recette.tempPreparation }} min</p>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Cuisson</h3>
-                        <p class="text-gray-600">{{ recette.tempCuisson }} min</p>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Total</h3>
-                        <p class="text-gray-600 font-bold">{{ recette.tempPreparation + recette.tempCuisson }} min</p>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Description</h2>
-                    <p class="text-gray-700 leading-relaxed">{{ recette.description }}</p>
-                </div>
+                
 
                 <div class="mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">Ingrédients</h2>
@@ -228,7 +178,76 @@
             </div>
         </div>
 
-        
+        <!-- Yorumlar ve Not Bölümü -->
+        <div class="bg-white p-6 md:p-8">
+            <!-- Ortalama Not -->
+            
+
+            <!-- Yorumlar -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-between">
+                    <span>Commentaires ({{ commentaires|length }})</span>
+                </h2>
+
+                <!-- Yorum Yazma Formu -->
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-md">
+                        <p class="mb-2 text-sm text-gray-600">
+                            Commentez et donnez une note avec votre nom d'utilisateur :
+                            <span class="font-semibold text-orange-600">{{ app.user.nom }}</span>
+                        </p>
+                        <form action="{{ path('app_commentaire_add', {'id': recette.id}) }}" method="POST">
+                            <div class="flex items-center space-x-1 mb-4">
+                                <span class="text-gray-700 font-medium">Votre note:</span>
+                                <div id="star-rating" class="flex items-center space-x-1">
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="1"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="2"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="3"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="4"></i>
+                                    <i class="fa-regular fa-star text-2xl text-gray-400 cursor-pointer hover:text-orange-500 transition-colors duration-200" data-value="5"></i>
+                                </div>
+                                <input type="hidden" name="note" id="note-input" value="">
+                            </div>
+                            <textarea name="contenu" rows="3"
+                                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                        placeholder="Écrivez votre commentaire..."></textarea>
+                            <div class="flex justify-end mt-auto">
+                                <button type="submit"
+                                    class="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-900 transition duration-300 cursor-pointer">
+                                    Envoyer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                {% else %}
+                    <p class="text-gray-600 mb-6">👉 <a href="{{ path('app_login') }}" class="text-orange-600 hover:underline">Connectez-vous</a> pour commenter.</p>
+                {% endif %}
+
+                <!-- Yorum Listesi -->
+                <div class="space-y-4">
+                    {% for commentaire in commentaires %}
+                        <div class="border border-gray-200 rounded-lg p-4 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-semibold text-gray-800">{{ commentaire.utilisateur.nom }}</span>
+                                    {% if commentaire.note is not null %}
+                                        <div class="text-yellow-400">
+                                            {% for i in 1..commentaire.note %}
+                                                <i class="fas fa-star"></i>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <span class="text-sm text-gray-500">{{ commentaire.createdAt|date('d/m/Y H:i') }}</span>
+                            </div>
+                            <p class="text-gray-700">{{ commentaire.contenu }}</p>
+                        </div>
+                    {% else %}
+                        <p class="text-gray-600 italic">Aucun commentaire pour le moment.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
@@ -300,4 +319,6 @@
         }
     });
 </script>
+
+
 {% endblock %}

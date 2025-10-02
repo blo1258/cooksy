@@ -2,189 +2,347 @@
 
 {% block title %}Accueil - Cooksy{% endblock %}
 
-
 {% block body %}
 
+<link 
+  rel="preload" 
+  href="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1600&fm=webp&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+  as="image"
+  fetchpriority="high"
+>
+<!-- Tailwind CSS CDN (Layout için Gerekli) ve Font Awesome (İkonlar için Gerekli) -->
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-        body {
-            background-color: #FF7043;
-        }
-    </style>
-    
+.background-food {
+    /* W=1600 ve fm=webp ile optimize edilmiş URL */
+    background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1600&fm=webp&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+.blur-overlay {
+    backdrop-filter: blur(6px);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+</style>
+
 <header class="bg-[#2e2e2e] shadow-md">
     <div class="container mx-auto flex items-center justify-between p-4 flex-wrap">
         <div class="flex-shrink-0">
             <a href="{{ path('app_accueil') }}">
-                <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-20 w-auto">
+            <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-20 w-auto">
             </a>
         </div>
-        <div class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
-            <form action="{{ path('app_recette_index') }}" method="GET" class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
-            <input type="search" name="q" placeholder="Que faisons-mosin's aujourd'hui ?" value="{{ app.request.query.get('q') }}" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-300 placeholder-white">
-            <button type="submit" class="absolute right-0 top-0 mt-2 mr-4 text-gray-500">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                </svg>
-            </button>
-        </form>
-            <button type="submit" class="absolute right-0 top-0 mt-2 mr-4 text-gray-500">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                </svg>
-            </button>
-        </div>
-        <div class="flex space-x-2 md:space-x-4">
-            {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <div class="user-info flex items-center space-x-2">
-                    <a href="{{ path('app_profil') }}" class="flex-col flex items-center space-x-2 text-gray-200 hover:text-orange-600 font-medium">
-                        {% if app.user.image %}
-                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
-                        {% else %}
-                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
-                        {% endif %}
-                        
-                        <span>{{ app.user.nom }}</span>
-                    </a>
-                    <div class="flex flex-col">
-                        <a href="{{ path('app_logout') }}" class="text-red-500 hover:text-red-600 font-medium">
-                            Se déconnecter
-                        </a>
-                        {# Eğer kullanıcı admin ise, admin paneline gitmek için bir bağlantı göster #}
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_admin_index') }}" class="text-blue-500 hover:text-blue-600 font-medium">
-                                Panneau d'administration
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-            {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
-            {% else %}
-                <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
-                <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
-            {% endif %}
-        </div>
+    <div class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
+    <form action="{{ path('app_recette_index') }}" method="GET" class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
+    <input type="search" name="q" placeholder="Que faisons-mosin's aujourd'hui ?" value="{{ app.request.query.get('q') }}" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-300 placeholder-white">
+        <button type="submit" class="absolute right-0 top-0 mt-2 mr-4 text-gray-500">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+            </svg>
+        </button>
+</form>
+
     </div>
+    <div class="flex space-x-2 md:space-x-4">
+        {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="user-info flex items-center space-x-2">
+                <a href="{{ path('app_profil') }}" class="flex-col flex items-center space-x-2 text-gray-200 hover:text-orange-600 font-medium">
+                    {% if app.user.image %}
+                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
+                    {% else %}
+                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                    {% endif %}
+                    
+                    <span>{{ app.user.nom }}</span>
+                </a>
+                <div class="flex flex-col">
+                    <a href="{{ path('app_logout') }}" class="text-red-500 hover:text-red-600 font-medium">
+                        Se déconnecter
+                    </a>
+                    {# Eğer kullanıcı admin ise, admin paneline gitmek için bir bağlantı göster #}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_admin_index') }}" class="text-blue-500 hover:text-blue-600 font-medium">
+                            Panneau d'administration
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
+        {% else %}
+            <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
+            <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
+        {% endif %}
+    </div>
+</div>
+
 </header>
 <!-- Yeni Menü -->
-<nav class="bg-gray-100 shadow-sm p-4 text-center">
-        <div class="container mx-auto flex justify-center space-x-6">
-            <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
-            <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
-            <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
-            <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
-        </div>
+<nav class="bg-gray-300 shadow-sm p-4 text-center">
+    <div class="container mx-auto flex justify-center space-x-6">
+        <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
+        <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
+        <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
+        <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+        <a href="{{ path('app_contact_index') }}" class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Contact</a>
+    </div>
 </nav>
 
-<main class="container mx-auto p-8 mt-6">
-    <div class="mb-6">
-        <a href="#" class="text-orange-500 font-semibold">Afficher « Toutes » les recettes</a>
+<!-- Düzeltilmiş Dinamik İstatistikler Paneli -->
+
+<!-- Ana Kapsayıcı: Flu Arka Plan ve Yükseklik Yönetimi -->
+
+<div class="background-food relative w-full min-h-[40vh] md:min-h-[50vh] flex items-center justify-center py-10 md:py-20">
+
+<!-- Blur ve Koyu Katman (İçerik okunurluğu için) -->
+<div class="blur-overlay absolute inset-0"></div>
+
+<!-- İçerik Kapsayıcısı (Arka planın önüne taşınır) -->
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-white text-center mb-10 md:mb-12 drop-shadow-lg">
+        Notre Plateforme en un Coup d'Œil
+    </h2>
+
+    <!-- İstatistik Kartları: BU KISIM YANA YANA OLMASINI SAĞLIYOR -->
+    <!-- md:grid-cols-3 sınıfı, tablet ve masaüstü ekranlarında 3 sütuna böler -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
+
+        <!-- Kart 1: Recettes Publiées -->
+        <div class="bg-white/60 p-6 md:p-10 rounded-xl shadow-2xl hover:shadow-indigo-500/50 transition duration-300 transform hover:scale-[1.02] flex flex-col justify-center items-center h-full min-h-[250px] backdrop-blur-sm">
+            <div class="text-indigo-600 mb-4">
+                <i class="fas fa-utensils text-4xl"></i>
+            </div>
+            <p id="stat-recipes" class="text-6xl font-bold text-indigo-700 leading-none">0</p>
+            <p class="mt-4 text-xl font-medium text-gray-700 text-center">Recettes Publiées</p>
+        </div>
+
+        <!-- Kart 2: Membres Actifs -->
+        <div class="bg-white/60 p-6 md:p-10 rounded-xl shadow-2xl hover:shadow-emerald-500/50 transition duration-300 transform hover:scale-[1.02] flex flex-col justify-center items-center h-full min-h-[250px] backdrop-blur-sm">
+            <div class="text-emerald-600 mb-4">
+                <i class="fas fa-users text-4xl"></i>
+            </div>
+            <p id="stat-users" class="text-6xl font-bold text-emerald-700 leading-none">0</p>
+            <p class="mt-4 text-xl font-medium text-gray-700 text-center">Membres Actifs</p>
+        </div>
+
+        <!-- Kart 3: Prix de la Plateforme -->
+        <div class="bg-white/60 p-6 md:p-10 rounded-xl shadow-2xl hover:shadow-yellow-500/50 transition duration-300 transform hover:scale-[1.02] flex flex-col justify-center items-center h-full min-h-[250px] backdrop-blur-sm">
+            <div class="text-yellow-600 mb-4">
+                <i class="fas fa-trophy text-4xl"></i>
+            </div>
+            <p id="stat-awards" class="text-6xl font-bold text-yellow-700 leading-none">0</p>
+            <p class="mt-4 text-xl font-medium text-gray-700 text-center">Prix de la Plateforme</p>
+        </div>
+
     </div>
 
-    <div class="flex flex-wrap gap-6 justify-center">
-        {% for recette in recettes %}
-            <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" 
-                   class="bg-white rounded shadow transition-transform duration-300 ease-in-out transform hover:scale-105 
-                   hover:-translate-y-2 hover:shadow-xl cursor-pointer group flex flex-col w-[280px]">
+</div>
 
-                
-                <!-- Resim -->
-                <div class="relative w-full h-[172px]">
-                    {% if recette.image is not null %}
-                        <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
-                             alt="{{ recette.titre }}" 
-                             class="w-full h-full object-cover rounded-t">
-                    {% endif %}
+</div>
 
-                    <div class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs font-bold py-1 px-2 rounded">
-                        {{ recette.duree }} min
-                    </div>
+<main class="bg-gray-200 container mx-auto p-8 mt-6">
+<div class="mb-6">
+<a href="#" class="text-orange-500 font-semibold">Afficher « Toutes » les recettes</a>
+</div>
 
-                    <div class="absolute top-2 right-2 bg-black bg-opacity-50 text-white py-1 px-2 rounded flex items-center space-x-1">
-                        <i class="fas fa-heart text-red-500"></i>
-                        <span class="text-xs font-bold">{{ recette.likes|length }}</span>
-                    </div>
+<div class="flex flex-wrap gap-6 justify-center">
+    {% for recette in recettes %}
+        <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" 
+                class="bg-white rounded shadow transition-transform duration-300 ease-in-out transform hover:scale-105 
+                hover:-translate-y-2 hover:shadow-xl cursor-pointer group flex flex-col w-[280px]">
+
+            
+            <!-- Resim -->
+            <div class="relative w-full h-[172px]">
+                {% if recette.image is not null %}
+                    <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
+                        alt="{{ recette.titre }}" 
+                        class="w-full h-full object-cover rounded-t">
+                {% endif %}
+
+                <div class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs font-bold py-1 px-2 rounded">
+                    {{ recette.duree }} min
                 </div>
 
-                <!-- Bilgi -->
-                <div class="p-2 recette-info flex flex-col gap-1">
-                    <h3 class="font-bold text-gray-800 text-base">{{ recette.titre }}</h3>
-                    <div class="flex items-center justify-between">
-                    <!-- Yazar -->
-                    <p class="text-sm text-gray-600">par {{ recette.auteur.nom }}</p>
-                    <!-- Yıldızlar -->
-                    <div class="flex items-center space-x-2">
-                        {% set totalRating = 0 %}
-                        {% set ratingCount = 0 %}
-                        {% for commentaire in recette.commentaires %}
-                            {% if commentaire.note is not null %}
-                                {% set totalRating = totalRating + commentaire.note %}
-                                {% set ratingCount = ratingCount + 1 %}
+                <div class="absolute top-2 right-2 bg-black bg-opacity-50 text-white py-1 px-2 rounded flex items-center space-x-1">
+                    <i class="fas fa-heart text-red-500"></i>
+                    <span class="text-xs font-bold">{{ recette.likes|length }}</span>
+                </div>
+            </div>
+
+            <!-- Bilgi -->
+            <div class="p-2 recette-info flex flex-col gap-1">
+                <h3 class="font-bold text-gray-800 text-base">{{ recette.titre }}</h3>
+                <div class="flex items-center justify-between">
+                <!-- Yazar -->
+                <p class="text-sm text-gray-600">par <span class="font-bold">
+                        {{ recette.auteur.nom }}
+                    </span></p>
+                <!-- Yıldızlar -->
+                <div class="flex items-center">
+                    {# TWIG DEĞİŞKEN TANIMLAMALARI VE HESAPLAMALAR BAŞLANGIÇ #}
+                    {% set totalRating = 0 %}
+                    {% set ratingCount = 0 %}
+                    {% for commentaire in recette.commentaires %}
+                    {% if commentaire.note is not null %}
+                    {% set totalRating = totalRating + commentaire.note %}
+                    {% set ratingCount = ratingCount + 1 %}
+                    {% endif %}
+                    {% endfor %}
+                    {# ORTALAMA DEĞER HESAPLANIYOR (virgülden sonra 1 basamak) #}
+                    {% set averageRating = ratingCount > 0 ? (totalRating / ratingCount)|round(1) : 0 %}
+                    {# TWIG DEĞİŞKEN TANIMLAMALARI VE HESAPLAMALAR BİTİŞ #}
+
+                    {# 1. YILDIZ GÖRÜNÜMÜ #}
+                    <span class="text-yellow-400 text-xs">
+                        {% for i in 1..5 %}
+                            {% if averageRating >= i %}
+                                <i class="fas fa-star"></i> {# Tam yıldız #}
+                            {% elseif averageRating > i - 1 and averageRating < i %}
+                                <i class="fas fa-star-half-alt"></i> {# Yarım yıldız #}
+                            {% else %}
+                                <i class="far fa-star text-gray-400"></i> {# Boş yıldız #}
                             {% endif %}
                         {% endfor %}
-                        {% set averageRating = ratingCount > 0 ? (totalRating / ratingCount)|round(1) : 0 %}
+                    </span>
 
-                        <span class="text-yellow-400 text-sm">
-                            {% for i in 1..5 %}
-                                {% if averageRating >= i %}
-                                    <i class="fas fa-star"></i>
-                                {% elseif averageRating > i - 1 and averageRating < i %}
-                                    <i class="fas fa-star-half-alt"></i>
-                                {% else %}
-                                    <i class="far fa-star text-gray-400"></i>
-                                {% endif %}
-                            {% endfor %}
+                    {# 2. YENİ EKLENEN OYLAMA BİLGİSİ #}
+                    {# Örnek: 4.5 / 5 (12 votes) #}
+                    <span class="text-gray-600 text-xs font-semibold ml-2">
+                        {# Ortalama Puan / Maksimum Puan #}
+                        {{ averageRating|number_format(1, ',', '.') }} / 5 
+                        
+                        {# Oy Sayısı #}
+                        <span class="text-gray-500 font-normal">
+                            ({{ ratingCount }} vote{{ ratingCount > 1 ? 's' : '' }})
                         </span>
-                    </div>
-                </div>
-                    
-                </div>
-            </a>
-        {% endfor %}
-    </div>
+                    </span>
+
+</div>
+</div>
+
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
 </main>
 
-
-
-
 <footer class="bg-[#2e2e2e] text-white py-8 mt-10">
-    <div class="container mx-auto px-4">
-        <!-- Menü -->
-        <div class="flex justify-center space-x-6 mb-6">
-            <a href="{{ path('app_recette_index') }}" class="hover:text-orange-500 transition duration-300">Recettes</a>
-            <a href="{{ path('app_cuisines_index') }}" class="hover:text-orange-500 transition duration-300">Cuisines</a>
-            <a href="{{ path('app_astuces_index') }}" class="hover:text-orange-500 transition duration-300">Astuces</a>
-            <a href="{{ path('app_about_index') }}" class="hover:text-orange-500 transition duration-300">À propos</a>
+<div class="container mx-auto px-4">
+<!-- Menü -->
+    <div class="flex justify-center space-x-6 mb-6">
+        <a href="{{ path('app_recette_index') }}" class="hover:text-orange-500 transition duration-300">Recettes</a>
+        <a href="{{ path('app_cuisines_index') }}" class="hover:text-orange-500 transition duration-300">Cuisines</a>
+        <a href="{{ path('app_astuces_index') }}" class="hover:text-orange-500 transition duration-300">Astuces</a>
+        <a href="{{ path('app_about_index') }}" class="hover:text-orange-500 transition duration-300">À propos</a>
+    </div>
+
+    <hr class="border-gray-700 mb-6">
+
+    <!-- Logo, Slogan ve Sosyal Medya İkonları -->
+    <div class="flex md:flex-row items-center justify-between mb-6">
+        <div class="flex-1 text-center md:text-left">
+            <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-16 mx-auto md:mx-0">
+            <p class="text-sm mt-2 text-gray-400">Cooksy — Partagez vos recettes préférées 🍲</p>
         </div>
-
-        <hr class="border-gray-700 mb-6">
-
-        <!-- Logo, Slogan ve Sosyal Medya İkonları -->
-        <div class="flex md:flex-row items-center justify-between mb-6">
-            <div class="flex-1 text-center md:text-left">
-                <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-16 mx-auto md:mx-0">
-                <p class="text-sm mt-2 text-gray-400">Cooksy — Partagez vos recettes préférées 🍲</p>
-            </div>
-            <div class="flex-1 flex justify-center md:justify-end space-x-4 mt-4 md:mt-0">
-                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
-                    <i class="fab fa-facebook-f text-2xl"></i>
-                </a>
-                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
-                    <i class="fab fa-instagram text-2xl"></i>
-                </a>
-                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
-                    <i class="fab fa-youtube text-2xl"></i>
-                </a>
-                <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
-                    <i class="fab fa-tiktok text-2xl"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Telif Hakkı Metni -->
-        <div class="text-center text-gray-500 text-sm">
-            © 2025 Cooksy. Tous droits réservés.
+        <div class="flex-1 flex justify-center md:justify-end space-x-4 mt-4 md:mt-0">
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-facebook-f text-2xl"></i>
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-instagram text-2xl"></i>
+            </a>
+            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-youtube text-2xl"></i>
+            </a>
+            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-tiktok text-2xl"></i>
+            </a>
         </div>
     </div>
+
+    <!-- Telif Hakkı Metni -->
+    <div class="text-center text-gray-500 text-sm">
+        © 2025 Cooksy. Tous droits réservés.
+    </div>
+</div>
+
 </footer>
+
+<!-- Sayaç Animasyonu Scripti (Tüm DOM Yüklendikten Sonra Çalışmalı) -->
+
+<script>
+// Hedef istatistikler (Fransızca dilinde sayılar ve süreler)
+const statsData = [
+{ id: 'stat-recipes', target: 542, duration: 2000 },
+{ id: 'stat-users', target: 12500, duration: 2500 },
+{ id: 'stat-awards', target: 8, duration: 1500 }
+];
+
+function animateCount(element, start, end, duration) {
+    let startTime = null;
+    
+    function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        
+        // Sayıyı yuvarla ve Fransızca formatında binlik ayırıcı (boşluk) ekle
+        const currentValue = Math.floor(progress * (end - start) + start);
+        // Hata Düzeltildi: 'fr-FR' artık doğru tırnak işaretleriyle kullanılıyor.
+        element.textContent = currentValue.toLocaleString('fr-FR'); 
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            // Hata Düzeltildi: 'fr-FR' artık doğru tırnak işaretleriyle kullanılıyor.
+            element.textContent = end.toLocaleString('fr-FR'); 
+        }
+    }
+    
+    window.requestAnimationFrame(step);
+}
+
+function startAllCounters() {
+    // NOT: statsData değişkeninin bu kod bloğunun dışında tanımlandığını varsayıyoruz.
+    statsData.forEach(stat => {
+        const element = document.getElementById(stat.id);
+        if (element) {
+            animateCount(element, 0, stat.target, stat.duration);
+        }
+    });
+}
+
+// Sayfa yüklendiğinde veya panel görünür olduğunda saymaya başla
+// window.onload yerine DOMContentLoaded kullanıldı (Daha hızlı ve güvenilir)
+document.addEventListener('DOMContentLoaded', function() {
+    // İstatistik panelinin ana kapsayıcısını seçiyoruz
+    // Hata Düzeltildi: '.background-food' doğru tırnak işaretleriyle kullanılıyor.
+    const statPanel = document.querySelector('.background-food'); 
+    if (!statPanel) return; // Panel yoksa dur
+
+    // Intersection Observer kullanarak sadece kullanıcı paneli gördüğünde animasyonu başlatma
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startAllCounters();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    observer.observe(statPanel);
+});
+
+
+</script>
+
 {% endblock %}

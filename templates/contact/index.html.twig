@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooksy | Contact</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Définition de la police Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+        }
+        /* Custom styles for the message box structure */
+        .message-container {
+            
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cooksy-orange': '#EA580C', // Couleur principale orange
+                        'cooksy-dark': '#1F2937',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Conteneur Principal -->
+    <div class="w-full max-w-2xl bg-white p-8 md:p-12 rounded-xl shadow-2xl transition-all duration-300">
+        
+        <!-- NOUVEAU: Bouton de Retour à l'Accueil (Geri Dön Butonu) -->
+        <a id="backToHomeLink" href="/" 
+           class="flex items-center text-blue-600 hover:text-cooksy-orange font-semibold transition duration-200 mb-8 w-max p-2 rounded-lg hover:bg-orange-50 transform hover:scale-[1.01]">
+            <!-- Icône de flèche gauche (Retour) -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+                <path d="M19 12H5"/>
+                <path d="m12 19-7-7 7-7"/>
+            </svg>
+            Retour à l'Accueil
+        </a>
+
+        <!-- Formulaire de Contact -->
+        <div id="formContainer">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-cooksy-dark mb-4 text-center">
+                Contactez-nous
+            </h1>
+            <p class="text-gray-500 mb-8 text-center">
+                N'hésitez pas à nous écrire pour toute question, suggestion ou demande de collaboration.
+            </p>
+
+            <form id="contactForm" class="space-y-6">
+                <!-- Nom et Prénom -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Votre Nom et Prénom</label>
+                    <input type="text" id="name" name="name" required 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-cooksy-orange focus:border-cooksy-orange transition duration-150"
+                           placeholder="Votre Nom Complet">
+                </div>
+
+                <!-- Adresse E-mail -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Votre Adresse E-mail</label>
+                    <input type="email" id="email" name="email" required 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-cooksy-orange focus:border-cooksy-orange transition duration-150"
+                           placeholder="exemple@mail.com">
+                </div>
+
+                <!-- Sujet -->
+                <div>
+                    <label for="subject" class="block text-sm font-medium text-gray-700">Sujet</label>
+                    <input type="text" id="subject" name="subject" required 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-cooksy-orange focus:border-cooksy-orange transition duration-150"
+                           placeholder="Par exemple : Suggestion de recette, Signalement de bug">
+                </div>
+
+                <!-- Message -->
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700">Votre Message</label>
+                    <textarea id="message" name="message" rows="4" required 
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-cooksy-orange focus:border-cooksy-orange transition duration-150"
+                              placeholder="Écrivez votre message détaillé ici..."></textarea>
+                </div>
+                
+                <!-- Hata Mesaj Alanı (Error Message Box) - Yeniden Yerleştirildi -->
+                <div id="errorMessageContent" class="p-4 rounded-lg text-center hidden" role="alert"></div>
+
+
+                <!-- Bouton d'Envoi -->
+                <button type="submit" id="submitButton"
+                        class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-bold text-white bg-cooksy-orange hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cooksy-orange transition duration-300 ease-in-out transform hover:scale-[1.01] disabled:opacity-60 disabled:cursor-not-allowed">
+                    Envoyer
+                    <svg id="loadingSpinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- ZONE DE SUCCÈS (NOUVEAU CONTENEUR) -->
+        <div id="successContainer" class="message-container hidden">
+            <!-- Icône de Coche SVG -->
+            <svg class="w-20 h-20 text-green-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            
+            <!-- Message de Succès (ID DEĞİŞTİRİLDİ!) -->
+            <div id="successMessageContent" class="mt-2 text-xl font-semibold text-gray-700"></div>
+
+            <!-- Bouton de Retour à l'Accueil -->
+            <a id="homeButton" href="/"
+               class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-cooksy-orange hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cooksy-orange transition duration-300 transform hover:scale-105">
+                <!-- Icône Maison (Accueil) -->
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Retour à l'Accueil
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        const form = document.getElementById('contactForm');
+        const formContainer = document.getElementById('formContainer');
+        const successContainer = document.getElementById('successContainer');
+        
+        // BAŞARI MESAJI İÇİN YENİ ID KULLANILIYOR
+        const successMessageContent = document.getElementById('successMessageContent');
+        
+        // HATA MESAJI İÇİN YENİ ID
+        const errorMessageContent = document.getElementById('errorMessageContent');
+
+        const submitButton = document.getElementById('submitButton');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        const ADMIN_EMAIL = "admin@cooksy.com"; 
+        const HOME_ROUTE = "/";
+
+        /**
+         * Metin içindeki ana sayfa linkini günceller.
+         */
+        document.getElementById('homeButton').href = HOME_ROUTE;
+
+
+        /**
+         * Ajuste l'état du bouton (Chargement/Prêt).
+         */
+        function setButtonState(isLoading) {
+            submitButton.disabled = isLoading;
+            if (isLoading) {
+                submitButton.childNodes[0].nodeValue = "Envoi en cours..."; 
+                loadingSpinner.classList.remove('hidden');
+            } else {
+                submitButton.childNodes[0].nodeValue = "Envoyer"; 
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Passe l'affichage du formulaire au message de succès.
+         */
+        function showSuccessState(message) {
+            formContainer.classList.add('hidden');
+            successContainer.classList.remove('hidden');
+            successMessageContent.innerHTML = message; // Doğru ID'ye mesajı yerleştir
+        }
+
+        /**
+         * Affiche la boîte de message en cas d'erreur.
+         */
+        function showErrorState(message) {
+             formContainer.classList.remove('hidden');
+             successContainer.classList.add('hidden');
+             
+             // Hata mesajını doğru div'e yerleştir
+             errorMessageContent.textContent = message;
+             errorMessageContent.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+             errorMessageContent.classList.add('bg-red-100', 'text-red-700');
+        }
+
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Masque la zone de message d'erreur avant l'envoi
+            errorMessageContent.classList.add('hidden'); 
+            
+            setButtonState(true);
+
+            // Collecte des données du formulaire
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            console.log("Les données du formulaire sont envoyées au serveur simulé:", data);
+
+            // SIMULATION : Délai de 2 secondes
+            setTimeout(() => {
+                try {
+                    // Simulation réussie
+                    setButtonState(false);
+                    const successMessage = `
+                        <p class="text-2xl font-bold text-cooksy-dark mb-4">Message Envoyé !</p>
+                        <p class="text-gray-600">Votre message concernant "<span class="font-semibold text-cooksy-orange">${data.subject}</span>" a été envoyé avec succès !</p>
+                        <p class="text-gray-600 mt-2">Nous vous répondrons dans les plus brefs délais à l'adresse <span class="font-semibold text-cooksy-orange">${ADMIN_EMAIL}</span>. Merci !</p>
+                    `;
+                    showSuccessState(successMessage);
+                    
+                } catch (error) {
+                    // Simulation d'erreur
+                    setButtonState(false);
+                    showErrorState("Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer plus tard.");
+                }
+
+            }, 2000); // 2 secondes d'attente
+        });
+    </script>
+</body>
+</html>
