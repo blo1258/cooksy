@@ -174,7 +174,7 @@ public function setAttente(bool $attente): self
     
 
     #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'likedRecipes')]
-    private $likes;
+    private Collection $likes;
 
     public function getDuree(): int
     {
@@ -183,14 +183,14 @@ public function setAttente(bool $attente): self
     
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, Utilisateur>
      */
     public function getLikes(): Collection
     {
         return $this->likes;
     }
 
-    public function addLike(User $like): self
+    public function addLike(Utilisateur $like): self
     {
         if (!$this->likes->contains($like)) {
             $this->likes->add($like);
@@ -199,7 +199,7 @@ public function setAttente(bool $attente): self
         return $this;
     }
 
-    public function removeLike(User $like): self
+    public function removeLike(Utilisateur $like): self
     {
         $this->likes->removeElement($like);
 

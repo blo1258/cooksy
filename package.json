@@ -28,5 +28,8 @@
     "postcss-loader": "^8.2.0",
     "tailwindcss": "^4.1.13"
   },
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "core-js": "^3.46.0"
+  }
 }

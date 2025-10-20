@@ -12,10 +12,10 @@
             </div>
             
             <div class="flex space-x-2 md:space-x-4">
-                {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <div class="user-info flex items-center space-x-2">
-                        <a href="{{ path('app_profil') }}" class="flex-col flex items-center space-x-2 text-gray-200 hover:text-orange-600 font-medium">
+        {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="user-info flex items-center space-x-2">
+                        <a href="{{ path('app_profil') }}" class="flex-col flex items-center text-gray-200 hover:text-orange-600 font-medium">
                         {% if app.user.image %}
                             <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
                         {% else %}
@@ -24,18 +24,30 @@
                         
                         <span>{{ app.user.nom }}</span>
                         </a>
+
+                        <div class="flex flex-col items-center space-y-4 ml-6 relative">
+                        {# ADMIN PANEL LİNKİ — sadece adminlere görünür #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_admin_index') }}" class="relative group">
+                                    <i class="fa-solid fa-gear text-blue-500 text-3xl"></i>
+                                    <span class="absolute top-1/2 left-[-270px] translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 whitespace-nowrap shadow-md">
+                                        Panneau d’administration
+                                    </span>
+                                </a>
+                            {% endif %}
+
                         <a href="{{ path('app_logout') }}" class="relative group">
                             
-                            <i class="fa-solid fa-right-from-bracket text-2xl text-red-500 group-hover:hidden"></i>
-                            <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">Se déconnecter</span>
+                            <i class="fa-solid fa-right-from-bracket text-red-500 text-3xl"></i>
+                            <span class="absolute left-[10px] top-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 whitespace-nowrap shadow-md">Se déconnecter</span>
                         </a>
                     </div>
-                {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
-                    <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
-                {% endif %}
-            </div>
+        {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
+        {% else %}
+            <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
+            <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
+        {% endif %}
+    </div>
         </div>
     </header>
     <nav class="bg-gray-300 shadow-sm p-4 relative">
@@ -67,21 +79,21 @@
         </div>
     </nav>
     <div class="container md:p-2">
-        <h1 class="text-4xl font-bold mb-6 text-gray-800">Toutes les Recettes</h1>
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Toutes les Recettes</h1>
 
         <!-- Arama ve Filtreleme Formu -->
-        <div class="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="mb-6 grid font-bold grid-cols-1 lg:grid-cols-3 gap-4">
         <input 
             type="text" 
             id="searchInput" 
             placeholder="Rechercher des recettes..." 
-            class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
+            class="w-full px-4 py-2 border-4 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
         >
 
         <div class="relative w-full">
             <select 
                 id="prepTimeFilter" 
-                class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
+                class="w-full px-4 py-2 border-4 rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
             >
             <option value="">Temps de préparation</option>
             <option value="15">Moins de 15 min</option>
@@ -98,13 +110,14 @@
     <div class="relative w-full">
             <select 
                 id="categoryFilter" 
-                class="w-full px-4 py-2 border rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
+                class="w-full px-4 py-2 border-4 rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white pr-8"
             >
                 <option value="">Catégories</option>
                 <option value="Plats principaux">Plats Principaux</option>
                 <option value="Dessert">Dessert</option>
                 <option value="Salades">Salades</option>
                 <option value="Petit Dejeuner">Petit Dejeuner</option>
+                <option value="Soupes">Soupes</option>
             </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -116,10 +129,10 @@
 
 
         <div class="overflow-x-auto bg-white rounded-lg shadow-md p-4">
-            <table class="min-w-full divide-y divide-gray-200" id="recetteTable">
+            <table class="wide-table min-w-full divide-y divide-gray-200" id="recetteTable">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                        <th scope="col" class="sticky left-0 bg-gray-100 z-10 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ingredients</th>
@@ -132,7 +145,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                 {% for recette in recettes %}
                     <tr class="recette-row" data-prep-time="{{ recette.tempPreparation }}" data-category="{{ recette.categorie.nom|default('') }}">
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="sticky left-0 bg-gray-100 z-10 px-6 py-3 whitespace-nowrap">
                             <a href="{{ path('app_recette_detail', {'id': recette.id}) }}" class="text-gray-700 hover:text-orange-600 hover:underline">
                             <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" alt="{{ recette.titre }}" class="h-12 w-12 object-cover rounded-full">
                         </td>

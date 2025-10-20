@@ -23,48 +23,112 @@
             </button>
         </div>
         <div class="flex space-x-2 md:space-x-4">
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <div class="user-info flex items-center space-x-2">
-                    <a href="{{ path('app_profil') }}" class="flex-col flex items-center space-x-2 text-gray-200 hover:text-orange-600 font-medium">
+        {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="user-info flex items-center space-x-2">
+                        <a href="{{ path('app_profil') }}" class="flex-col flex items-center text-gray-200 hover:text-orange-600 font-medium">
                         {% if app.user.image %}
-                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
+                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Photo" class="profile-avatar w-[76px] h-[76px]">
                         {% else %}
-                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
                         {% endif %}
                         
                         <span>{{ app.user.nom }}</span>
-                    </a>
-                    <a href="{{ path('app_logout') }}" class="relative group">
-                        <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-red-500 group-hover:hidden"></i>
-                        <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">Se déconnecter</span>
-                    </a>
-                </div>
-            {% else %}
-                <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
-                <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
-            {% endif %}
-        </div>
+                        </a>
+
+                        <div class="flex flex-col items-center space-y-4 ml-6 relative">
+                        {# ADMIN PANEL LİNKİ — sadece adminlere görünür #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_admin_index') }}" class="relative group">
+                                    <i class="fa-solid fa-gear text-blue-500 text-3xl"></i>
+                                    <span class="absolute top-1/2 left-[-270px] translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 whitespace-nowrap shadow-md">
+                                        Panneau d’administration
+                                    </span>
+                                </a>
+                            {% endif %}
+
+                        <a href="{{ path('app_logout') }}" class="relative group">
+                            
+                            <i class="fa-solid fa-right-from-bracket text-red-500 text-3xl"></i>
+                            <span class="absolute left-[10px] top-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 whitespace-nowrap shadow-md">Se déconnecter</span>
+                        </a>
+                    </div>
+        {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
+        {% else %}
+            <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
+            <a href="{{ path('app_register') }}" class="bg-orange-100 text-orange-600 font-semibold py-2 px-4 rounded-full border border-orange-500 hover:bg-orange-200 transition duration-300 transform hover:scale-105 shadow-md">S'inscrire</a>
+        {% endif %}
+    </div>
     </div>
 </header>
-<nav class="bg-gray-100 shadow-sm p-4 text-center">
-    <div class="container mx-auto flex justify-center space-x-6">
-        <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Recettes</a>
-        <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Cuisines</a>
-        <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">Astuces</a>
-        <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:text-orange-600 font-semibold transition duration-300">À propos</a>
-    </div>
-</nav>
+<nav class="bg-gray-300 shadow-sm p-4 relative">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="hidden md:!flex space-x-6 justify-center items-center w-full">
+                <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
+                <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
+                <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
+                <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+                <a href="{{ path('app_contact_index') }}" class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Contact</a>
+            </div>
 
-<main class="container bg-[#FF7043] mx-8 p-4 md:p-8">
-    <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-        <div class="md:flex md:flex-col lg:flex-row">
+         <!-- Burger Menü Butonu (sadece mobilde) -->
+            <div class="relative md:hidden ml-auto group">
+                <button id="burger-btn" class="md:hidden ml-auto text-gray-700 text-2xl focus:outline-none cursor-pointer">
+                    <i class="fas fa-bars"></i>
+                </button>
+    
+
+    <!-- Mobile Menü: Konumlandırma sorununu gidermek için bu div'i ana nav div'inin dışına taşıdık. -->
+                <div id="mobile-menu" class="hidden group-hover:flex absolute right-0 top-full mt-2 bg-white shadow-lg rounded-md flex-col space-y-2 p-3 w-40 z-50">
+                    <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Recettes</a>
+                    <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Cuisines</a>
+                    <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Astuces</a>
+                    <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">À propos</a>
+                    <a href="{{ path('app_contact_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<main class="container">
+    <div class="bg-[#FF7043] shadow-xl overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Tarif Görseli -->
-            <div class="relative w-full h-auto md:md:h-auto lg:h-[624px]">
+            <div class="relative overflow-auto w-full h-auto">
                 {% if recette.image is not null %}
                     <img src="{{ asset('uploads/recettes/' ~ recette.image) }}" 
                         alt="{{ recette.titre }}" 
-                        class="w-full h-full object-cover rounded-t-lg lg:rounded-r-none lg:rounded-l-lg">
+                        class="w-[95%] h-[650px] object-cover rounded-2xl mx-auto my-3">
                 {% endif %}
+
+                {% if app.user %}
+        {# Beğeni durumunu kontrol et: Kullanıcı tarifi beğenmiş mi? #}
+        {% set isLiked = recette.likes.contains(app.user) %}
+        
+            <button 
+                id="likeButton" 
+                data-recette-id="{{ recette.id }}" 
+                data-like-url="{{ path('recette_like', {'id': recette.id}) }}"
+                class="absolute top-6 right-8 bg-black bg-opacity-50 text-white py-1 px-2 rounded-lg flex items-center space-x-1 cursor-pointer transition duration-200 hover:bg-opacity-70"
+                title="J'aime / Je n'aime pas"
+            >
+                <i id="likeIcon" 
+                class="fas fa-heart text-xl transition-colors duration-200 
+                {# Beğenme durumuna göre renk ataması #}
+                {% if isLiked %}text-red-500{% else %}text-white{% endif %}">
+                </i>
+                <span id="likesCount" class="text-xl font-bold">
+                    {{ recette.likes|length }}
+                </span>
+            </button>
+
+    {% else %}
+        {# Giriş yapmamış kullanıcılar için sadece gösterim #}
+        <div class="absolute top-6 right-8 bg-black bg-opacity-50 text-white py-1 px-2 rounded-lg flex items-center space-x-1">
+            <i class="fas fa-heart text-xl text-white"></i>
+            <span class="text-xl font-bold">{{ recette.likes|length }}</span>
+        </div>
+    {% endif %}
 
                 <div class=" p-1 flex items-center justify-between mb-8 ml-auto w-fit">
                 <div class="flex items-center space-x-2">
@@ -106,27 +170,27 @@
                 <div class="px-4 py-4 md:px-6 md:py-6">
                 <!-- Tarif Başlığı ve Yazar -->
                     <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">{{ recette.titre }}</h1>
-                    <p class="text-sm text-gray-600 mb-4">par <span class="font-medium text-orange-600">{{ recette.auteur.nom }}</span></p>
+                    <p class="text-xl text-gray-600 mb-4">par <span class="text-xl font-bold text-black">{{ recette.auteur.nom }}</span></p>
 
                     <hr class="my-4">
                 
                     <!-- Süreler ve ikonlar -->
-                    <div class="flex flex-wrap items-center space-x-8 mb-6">
-                        <div class="flex items-center space-x-2">
+                    <div class="flex flex-wrap items-center space-x-4 mb-6">
+                        <div class="flex items-center space-x-1">
                             <span class="text-2xl text-orange-500">⏳</span>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800">Préparation</h3>
                                 <p class="text-gray-600">{{ recette.tempPreparation }} min</p>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-1">
                             <span class="text-2xl text-orange-500">🔥</span>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800">Cuisson</h3>
                                 <p class="text-gray-600">{{ recette.tempCuisson }} min</p>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-1">
                             <span class="text-2xl text-orange-500">⏱️</span>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800">Total</h3>
@@ -135,6 +199,7 @@
                         </div>
                     </div>
 
+                    <hr class="my-4">
                         <!-- Tarif açıklaması -->
                         <div class="mb-6">
                             <h2 class="text-2xl font-bold text-gray-800 mb-2">Description</h2>
@@ -145,7 +210,7 @@
             </div>
             
             <!-- Tarif Detayları -->
-            <div class="p-6 md:p-8 w-full lg:w-1/2">
+            <div class="p-6 md:p-8 w-full lg:w-full">
                 
 
                 <div class="mb-6">
@@ -158,28 +223,38 @@
                     <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ recette.etapes }}</p>
                 </div>
 
-                <div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 mt-8">
-                    <a href="{{ path('app_recette_index') }}" class="w-full md:w-auto text-center bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300 transform hover:scale-105">
-                        Retour à la liste
+                <div class="flex flex-col space-y-3 mt-8">
+    
+                    {# 1. Retour à la liste #}
+                    <a href="{{ path('app_recette_index') }}" class="w-full text-center bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl hover:bg-gray-300 transition duration-300 transform hover:scale-[1.02] shadow-sm">
+                        <i class="fas fa-arrow-left mr-2"></i> Retour à la liste
                     </a>
+                    
                     {% if is_granted('ROLE_ADMIN') or app.user == recette.auteur %}
-                        <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="w-full md:w-auto text-center bg-orange-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 transform hover:scale-105 shadow-md">
-                            Modifier
+                        
+                        {# 2. Modifier #}
+                        <a href="{{ path('app_recette_edit', {'id': recette.id}) }}" class="w-full text-center bg-orange-500 text-white font-semibold py-3 px-6 rounded-xl hover:bg-orange-600 transition duration-300 transform hover:scale-[1.02] shadow-lg shadow-orange-500/50">
+                            <i class="fas fa-edit mr-2"></i> Modifier
                         </a>
-                        <button type="button" onclick="showDeleteModal()" class="w-full md:w-auto text-center bg-red-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 transform hover:scale-105 shadow-md cursor-pointer">
-                            Supprimer
+                        
+                        {# 3. Supprimer (Buton) #}
+                        <button type="button" onclick="showDeleteModal()" class="w-full text-center bg-red-500 text-white font-semibold py-3 px-6 rounded-xl hover:bg-red-600 transition duration-300 transform hover:scale-[1.02] shadow-lg shadow-red-500/50 cursor-pointer">
+                            <i class="fas fa-trash-alt mr-2"></i> Supprimer
                         </button>
+                        
+                        {# Formulaire de suppression (Gizli) #}
                         <form id="deleteForm" action="{{ path('app_recette_delete', {'id': recette.id}) }}" method="POST" style="display: none;">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
                         </form>
+                        
                     {% endif %}
-                </div>
+            </div>
             </div>
         </div>
 
         <!-- Yorumlar ve Not Bölümü -->
-        <div class="bg-white p-6 md:p-8">
+        <div class="bg-[#FF7043] p-6 md:p-8">
             <!-- Ortalama Not -->
             
 
@@ -220,7 +295,8 @@
                         </form>
                     </div>
                 {% else %}
-                    <p class="text-gray-600 mb-6">👉 <a href="{{ path('app_login') }}" class="text-orange-600 hover:underline">Connectez-vous</a> pour commenter.</p>
+                    <p class="text-gray-600 mb-6">👉 <a href="{{ path('app_login') }}" 
+                    class="text-orange-600 hover:underline">Connectez-vous</a> pour commenter.</p>
                 {% endif %}
 
                 <!-- Yorum Listesi -->
@@ -269,7 +345,51 @@
     </div>
 </div>
 
+<footer class="bg-[#2e2e2e] text-white py-8 mt-10">
+<div class="container mx-auto px-4">
+<!-- Menü -->
+    <div class="flex justify-center space-x-4 mb-6">
+            <a href="{{ path('app_recette_index') }}" class="hover:text-orange-500 transition duration-300">Recettes</a>
+            <a href="{{ path('app_cuisines_index') }}" class="hover:text-orange-500 transition duration-300">Cuisines</a>
+            <a href="{{ path('app_astuces_index') }}" class="hover:text-orange-500 transition duration-300">Astuces</a>
+            <a href="{{ path('app_about_index') }}" class="hover:text-orange-500 transition duration-300">À propos</a>
+            <a href="{{ path('app_contact_index') }}" class="hover:text-orange-500 transition duration-300">Contact</a>
+        </div>
+
+    <hr class="border-gray-700 mb-6">
+
+    <!-- Logo, Slogan ve Sosyal Medya İkonları -->
+    <div class="flex md:flex-row items-center justify-between mb-6">
+        <div class="flex-1 text-center md:text-left">
+            <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-16 mx-auto md:mx-0">
+            <p class="text-sm mt-2 text-gray-400">Cooksy — Partagez vos recettes préférées 🍲</p>
+        </div>
+        <div class="flex-1 flex justify-center md:justify-end space-x-4 mt-4 md:mt-0">
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-facebook-f text-2xl"></i>
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-instagram text-2xl"></i>
+            </a>
+            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-youtube text-2xl"></i>
+            </a>
+            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition duration-300">
+                <i class="fab fa-tiktok text-2xl"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Telif Hakkı Metni -->
+    <div class="text-center text-gray-500 text-sm">
+        © 2025 Cooksy. Tous droits réservés.
+    </div>
+</div>
+
+</footer>
+
 <script>
+alert('coucou1');
     function showDeleteModal() {
         document.getElementById('deleteModal').classList.remove('hidden');
     }
@@ -312,12 +432,96 @@
     });
 
     starContainer.addEventListener('click', (e) => {
+        alert('coucou');
         if (e.target.tagName === 'I') {
             currentRating = parseInt(e.target.dataset.value);
             noteInput.value = currentRating;
             fillStars(currentRating);
         }
     });
+
+
+const burgerBtn = document.getElementById("burger-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+// Menü aç/kapa
+burgerBtn.addEventListener("mouseover", (event) => {
+    event.stopPropagation();
+    mobileMenu.classList.remove("hidden");
+});
+
+document.addEventListener("click", (event) => {
+    const isMenuVisible = !mobileMenu.classList.contains("hidden");
+    
+    if(isMenuVisible && !burgerBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+        mobileMenu.classList.add("hidden");
+    }
+});
+
+// Ekran genişleyince (md ve üstü) mobil menüyü otomatik kapat
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 768) {
+    mobileMenu.classList.add("hidden");
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const likeButton = document.getElementById('likeButton');
+    const likesCountSpan = document.getElementById('likesCount');
+    const likeIcon = document.getElementById('likeIcon'); // Ikonu seçtik
+
+    if (likeButton) {
+        likeButton.addEventListener('click', async () => {
+            const url = likeButton.dataset.likeUrl;
+            
+            // Tıklamayı anlık olarak devre dışı bırak (Çift tıklamayı engellemek için)
+            likeButton.disabled = true;
+
+            try {
+                // AJAX isteği başlat
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.status === 403) {
+                    alert('Vous devez être connecté pour effectuer cette action.');
+                    likeButton.disabled = false;
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Hata! Durum: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Beğeni sayısını güncelle
+                likesCountSpan.textContent = data.likesCount;
+
+                if (data.isLiked) {
+                    // Beğenildi: İkonu Kırmızı yap
+                    likeIcon.classList.remove('text-white');
+                    likeIcon.classList.add('text-red-500');
+                } else {
+                    // Beğeni Kaldırıldı: İkonu Beyaz yap
+                    likeIcon.classList.remove('text-red-500');
+                    likeIcon.classList.add('text-white');
+                }
+
+            } catch (error) {
+                console.error('Une erreur s\'est produite pendant le processus d\'identification:', error);
+                alert('Une erreur sest produite, veuillez vérifier la console.');
+            } finally {
+                // İşlem bittiğinde butonu tekrar aktif et
+                likeButton.disabled = false;
+            }
+        });
+    }
+});
+
 </script>
 
 

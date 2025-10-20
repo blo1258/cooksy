@@ -6,12 +6,14 @@
     <title>Cooksy | Contact</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" xintegrity="sha512-1ycn6IcaQQ40jB0NB9yU8lO5Xg8z0m0nS3L5w+0A+E7+8p7m7yA3gD1i9P4/p8S0s+j+c/Q+Hk/e/g/Hw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
         /* Définition de la police Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f7f7;
+            background-color: #FF7043;
         }
         /* Custom styles for the message box structure */
         .message-container {
@@ -36,21 +38,19 @@
         }
     </script>
 </head>
+
+
 <body class="min-h-screen flex items-center justify-center p-4">
 
     <!-- Conteneur Principal -->
     <div class="w-full max-w-2xl bg-white p-8 md:p-12 rounded-xl shadow-2xl transition-all duration-300">
         
         <!-- NOUVEAU: Bouton de Retour à l'Accueil (Geri Dön Butonu) -->
-        <a id="backToHomeLink" href="/" 
-           class="flex items-center text-blue-600 hover:text-cooksy-orange font-semibold transition duration-200 mb-8 w-max p-2 rounded-lg hover:bg-orange-50 transform hover:scale-[1.01]">
-            <!-- Icône de flèche gauche (Retour) -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                <path d="M19 12H5"/>
-                <path d="m12 19-7-7 7-7"/>
-            </svg>
-            Retour à l'Accueil
-        </a>
+        <div class="text-right mb-5">
+                <a href="{{ path('app_accueil') }}" class="inline-block px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-600 transition duration-300">
+                    <i class="fas fa-home"></i> Accueil
+                </a>
+            </div>
 
         <!-- Formulaire de Contact -->
         <div id="formContainer">

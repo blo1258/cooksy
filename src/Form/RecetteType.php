@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RecetteType extends AbstractType
 {
@@ -23,15 +24,23 @@ class RecetteType extends AbstractType
             ->add('description', TextareaType::class, ['label' => 'Description'])
             ->add('ingredients', TextareaType::class, ['label' => 'Ingrédients (séparés par une virgule)'])
             ->add('etapes', TextareaType::class, ['label' => 'Étapes de préparation'])
+            
+            // "temp" (tekil) olarak kullandığınız adları koruduk.
             ->add('tempPreparation', IntegerType::class, ['label' => 'Temps de préparation (min)'])
             ->add('tempCuisson', IntegerType::class, ['label' => 'Temps de cuisson (min)'])
+            
             ->add('image', FileType::class, [
-                'label' => 'Image de la recette',
+                'label' => 'Image de la recette (JPG, PNG ou WEBP)',
+                // ZORUNLU: Resim yükleme Controller'da manuel olarak yönetildiği için false olmalı.
                 'mapped' => false,
+                // ZORUNLU: Düzenleme sırasında yeni resim yüklemek isteğe bağlı olmalı.
                 'required' => false,
+                'attr' => [
+                    'accept' => 'image/jpeg,image/png,image/webp', // 🔹 sadece görsel seçimine izin ver
+                ],
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '5M',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',

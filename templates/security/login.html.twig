@@ -21,14 +21,17 @@
         <form action="{{ path('app_login') }}" method="post">
             <div class="mb-4">
                 <label for="inputEmail" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required autofocus>
+                <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" 
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight 
+                                focus:outline-none focus:shadow-outline" required autofocus>
             </div>
             
             <!-- Şifre Alanı ve Göz İkonu -->
             <div class="mb-4">
                 <label for="inputPassword" class="block text-gray-700 text-sm font-bold mb-2">Mot de passe</label>
                 <div class="relative">
-                    <input type="password" name="_password" id="inputPassword" class="shadow appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="password" name="_password" id="inputPassword" class="shadow appearance-none border rounded 
+                    w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                     
                     <!-- Göz İkonu Düğmesi -->
                     <button type="button" id="togglePassword" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer hover:text-orange-500 transition duration-150">

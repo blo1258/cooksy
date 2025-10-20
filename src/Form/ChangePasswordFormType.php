@@ -10,6 +10,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\IsNewPasswordDifferent;
 
 class ChangePasswordFormType extends AbstractType
 {
@@ -60,4 +62,19 @@ class ChangePasswordFormType extends AbstractType
     {
         $resolver->setDefaults([]);
     }
+
+
+    /**
+     * @Assert\NotBlank(message="Lütfen eski şifrenizi girin.")
+     */
+    public $oldPassword;
+
+    /**
+     * @Assert\Length(min=6, minMessage="Şifre en az 6 karakter olmalıdır.")
+     * * // İŞTE ÇÖZÜM: Yeni kısıtlamayı buraya ekliyoruz.
+     * @IsNewPasswordDifferent()
+     */
+    public $newPassword; // Bu, formdaki newPassword.first ve newPassword.second'ı temsil eder.
+
+
 }

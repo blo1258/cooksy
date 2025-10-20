@@ -27,11 +27,16 @@ class CommentaireController extends AbstractController
             $commentaire = new Commentaire();
             $commentaire->setContenu($contenu);
             $note = $request->request->get('note');
+                if (!empty($note)) {
+                    $noteInteger = (int) $note;
+                } else {
+                    $noteInteger = null;
+                }
+            $commentaire->setNote($noteInteger);
             $commentaire->setUtilisateur($this->getUser());
             $commentaire->setRecette($recette);
             $commentaire->setCreatedAt(new \DateTimeImmutable());
-            $commentaire->setNote($note);
-
+            
             $em->persist($commentaire);
             $em->flush();
 

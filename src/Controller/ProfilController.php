@@ -168,15 +168,22 @@ final class ProfilController extends AbstractController
         $user = $this->getUser();
         
         // Trouver et supprimer toutes les recettes de l'utilisateur.
-        $recettes = $em->getRepository(Recette::class)->findBy(['utilisateur' => $user]);
+        $recettes = $em->getRepository(Recette::class)->findBy(['auteur' => $user]);
 
         foreach ($recettes as $recette) {
             $em->remove($recette);
         }
 
         // Enfin, supprimer l'utilisateur.
-        $em->remove($user);
-        $em->flush();
+        if ($user) {
+        // Déconnecter l'utilisateur
+            $token = null;
+            $security->setToken($token);
+            $this->container->get('session')->invalidate();
+
+            $em->remove($user);
+            $em->flush();
+        }
 
         $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
         return $this->redirectToRoute('app_accueil');

@@ -14,7 +14,7 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
 .background-food {
     /* W=1600 ve fm=webp ile optimize edilmiş URL */
@@ -22,11 +22,34 @@
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+  position: relative; /* ÖNEMLİ */
 }
+
 .blur-overlay {
-    backdrop-filter: blur(6px);
-    background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 0;
 }
+
+.search-input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+        /* Boyutu artırıyoruz (W-7 H-7 SVG ile eşleşecek şekilde) */
+        width: 1.75rem; 
+        height: 1.75rem;
+        /* 'x' işaretini daha belirgin ve beyaz yapıyoruz */
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') no-repeat center center;
+        /* Butona tıklanabilirliği artırmak için padding veriyoruz */
+        padding: 0;
+        cursor: pointer;
+        opacity: 0.8; 
+        transition: opacity 0.2s;
+    }
+
+    .search-input::-webkit-search-cancel-button:hover {
+        opacity: 1;
+    }
+
 
 </style>
 
@@ -37,42 +60,51 @@
             <img src="{{ asset('images/cooksy_logo.png') }}" alt="Cooksy Logo" class="h-20 w-auto">
             </a>
         </div>
-    <div class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
-    <form action="{{ path('app_recette_index') }}" method="GET" class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
-    <input type="search" name="q" placeholder="Que faisons-mosin's aujourd'hui ?" value="{{ app.request.query.get('q') }}" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-300 placeholder-white">
-        <button type="submit" class="absolute right-0 top-0 mt-2 mr-4 text-gray-500">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-            </svg>
-        </button>
-</form>
+        <div class="relative flex-grow mx-auto max-w-lg w-full mt-4 mb-2">
+            <form action="{{ path('app_recette_index') }}" method="GET" class="relative flex-grow mx-auto max-w-lg order-last md:order-none w-full md:w-auto mt-4 md:mt-0">
+                <input type="search" name="q" placeholder="Que faisons-nous aujourd'hui ?" value="{{ app.request.query.get('q') }}" 
+                        class="w-full pl-16 pr-10 py-2 text-white border border-gray-600 
+                        rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 
+                        transition duration-300 placeholder-white search-input">
+                    <button type="submit" class="absolute left-0 top-10 transform -translate-y-1/2 ml-4 text-white z-10">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+            </form>
 
-    </div>
+        </div>
     <div class="flex space-x-2 md:space-x-4">
         {# Kullanıcı giriş yaptıysa, profil avatarını ve çıkış yap bağlantısını göster #}
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <div class="user-info flex items-center space-x-2">
-                <a href="{{ path('app_profil') }}" class="flex-col flex items-center space-x-2 text-gray-200 hover:text-orange-600 font-medium">
-                    {% if app.user.image %}
-                        <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
-                    {% else %}
-                        <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Profile photo default" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
-                    {% endif %}
-                    
-                    <span>{{ app.user.nom }}</span>
-                </a>
-                <div class="flex flex-col">
-                    <a href="{{ path('app_logout') }}" class="text-red-500 hover:text-red-600 font-medium">
-                        Se déconnecter
-                    </a>
-                    {# Eğer kullanıcı admin ise, admin paneline gitmek için bir bağlantı göster #}
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('app_admin_index') }}" class="text-blue-500 hover:text-blue-600 font-medium">
-                            Panneau d'administration
+                        <a href="{{ path('app_profil') }}" class="flex-col flex items-center text-gray-200 hover:text-orange-600 font-medium">
+                        {% if app.user.image %}
+                            <img src="{{ asset('uploads/' ~ app.user.image) }}" alt="Profil Resmi" class="profile-avatar w-[76px] h-[76px]">
+                        {% else %}
+                            <img src="https://placehold.co/32x32/E0E0E0/FFFFFF?text=P" alt="Varsayılan Profil Resmi" class="profile-avatar w-[76px] h-[76px] border-2 border-orange-500">
+                        {% endif %}
+                        
+                        <span>{{ app.user.nom }}</span>
                         </a>
-                    {% endif %}
-                </div>
-            </div>
+
+                        <div class="flex flex-col items-center space-y-4 ml-6 relative">
+                        {# ADMIN PANEL LİNKİ — sadece adminlere görünür #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_admin_index') }}" class="relative group">
+                                    <i class="fa-solid fa-gear text-blue-500 text-3xl"></i>
+                                    <span class="absolute top-1/2 left-[-270px] translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 whitespace-nowrap shadow-md">
+                                        Panneau d’administration
+                                    </span>
+                                </a>
+                            {% endif %}
+
+                        <a href="{{ path('app_logout') }}" class="relative group">
+                            
+                            <i class="fa-solid fa-right-from-bracket text-red-500 text-3xl"></i>
+                            <span class="absolute left-[10px] top-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-yellow-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 whitespace-nowrap shadow-md">Se déconnecter</span>
+                        </a>
+                    </div>
         {# Kullanıcı giriş yapmadıysa, giriş ve kayıt linklerini göster #}
         {% else %}
             <a href="{{ path('app_login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-md">Se connecter</a>
@@ -83,31 +115,51 @@
 
 </header>
 <!-- Yeni Menü -->
-<nav class="bg-gray-300 shadow-sm p-4 text-center">
-    <div class="container mx-auto flex justify-center space-x-6">
-        <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
-        <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
-        <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
-        <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
-        <a href="{{ path('app_contact_index') }}" class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Contact</a>
-    </div>
-</nav>
+<nav class="bg-gray-300 shadow-sm p-4 relative">
+        <div class="container mx-auto flex justify-end items-center">
+            <div class="hidden md:!flex space-x-6 justify-center items-center w-full">
+                <a href="{{ path('app_recette_index') }}" class="{% if app.request.attributes.get('_route') == 'app_recette_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Recettes</a>
+                <a href="{{ path('app_cuisines_index') }}" class="{% if app.request.attributes.get('_route') == 'app_cuisines_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Cuisines</a>
+                <a href="{{ path('app_astuces_index') }}" class="{% if app.request.attributes.get('_route') == 'app_astuces_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Astuces</a>
+                <a href="{{ path('app_about_index') }}" class="{% if app.request.attributes.get('_route') == 'app_about_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">À propos</a>
+                <a href="{{ path('app_contact_index') }}" class="{% if app.request.attributes.get('_route') == 'app_contact_index' %}text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %} font-semibold transition duration-300">Contact</a>
+            </div>
+
+         <!-- Burger Menü Butonu (sadece mobilde) -->
+            <div class="relative md:hidden ml-auto group">
+                <button id="burger-btn" class="md:hidden ml-auto text-gray-700 text-2xl focus:outline-none cursor-pointer">
+                    <i class="fas fa-bars"></i>
+                </button>
+    
+
+    <!-- Mobile Menü: Konumlandırma sorununu gidermek için bu div'i ana nav div'inin dışına taşıdık. -->
+                <div id="mobile-menu" class="hidden group-hover:flex absolute right-0 top-full mt-2 bg-white shadow-lg rounded-md flex-col space-y-2 p-3 w-40 z-50">
+                    <a href="{{ path('app_recette_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Recettes</a>
+                    <a href="{{ path('app_cuisines_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Cuisines</a>
+                    <a href="{{ path('app_astuces_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Astuces</a>
+                    <a href="{{ path('app_about_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">À propos</a>
+                    <a href="{{ path('app_contact_index') }}" class="text-gray-700 hover:bg-gray-100 p-2 rounded block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
 <!-- Düzeltilmiş Dinamik İstatistikler Paneli -->
 
 <!-- Ana Kapsayıcı: Flu Arka Plan ve Yükseklik Yönetimi -->
 
-<div class="background-food relative w-full min-h-[40vh] md:min-h-[50vh] flex items-center justify-center py-10 md:py-20">
 
-<!-- Blur ve Koyu Katman (İçerik okunurluğu için) -->
-<div class="blur-overlay absolute inset-0"></div>
+
+
 
 <!-- İçerik Kapsayıcısı (Arka planın önüne taşınır) -->
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-white text-center mb-10 md:mb-12 drop-shadow-lg">
-        Notre Plateforme en un Coup d'Œil
-    </h2>
+<div class="container mx-auto w-full relative z-10">
+   
+        <div class="background-food relative w-full min-h-[40vh] md:min-h-[50vh] flex items-center justify-center py-10 md:py-20">
+        
+     <!-- Blur ve Koyu Katman (İçerik okunurluğu için) -->
+<div class="blur-overlay absolute inset-0 w-full h-full"></div>   
+        
 
     <!-- İstatistik Kartları: BU KISIM YANA YANA OLMASINI SAĞLIYOR -->
     <!-- md:grid-cols-3 sınıfı, tablet ve masaüstü ekranlarında 3 sütuna böler -->
@@ -146,10 +198,9 @@
 
 </div>
 
-<main class="bg-gray-200 container mx-auto p-8 mt-6">
-<div class="mb-6">
-<a href="#" class="text-orange-500 font-semibold">Afficher « Toutes » les recettes</a>
-</div>
+<main class="bg-[#ff7043] container mx-auto p-8">
+
+<h2 class="text-3xl text-center font-bold text-gray-800 mb-6">Recettes Populaires</h2>
 
 <div class="flex flex-wrap gap-6 justify-center">
     {% for recette in recettes %}
@@ -237,12 +288,13 @@
 <footer class="bg-[#2e2e2e] text-white py-8 mt-10">
 <div class="container mx-auto px-4">
 <!-- Menü -->
-    <div class="flex justify-center space-x-6 mb-6">
-        <a href="{{ path('app_recette_index') }}" class="hover:text-orange-500 transition duration-300">Recettes</a>
-        <a href="{{ path('app_cuisines_index') }}" class="hover:text-orange-500 transition duration-300">Cuisines</a>
-        <a href="{{ path('app_astuces_index') }}" class="hover:text-orange-500 transition duration-300">Astuces</a>
-        <a href="{{ path('app_about_index') }}" class="hover:text-orange-500 transition duration-300">À propos</a>
-    </div>
+    <div class="flex justify-center space-x-4 mb-6">
+            <a href="{{ path('app_recette_index') }}" class="hover:text-orange-500 transition duration-300">Recettes</a>
+            <a href="{{ path('app_cuisines_index') }}" class="hover:text-orange-500 transition duration-300">Cuisines</a>
+            <a href="{{ path('app_astuces_index') }}" class="hover:text-orange-500 transition duration-300">Astuces</a>
+            <a href="{{ path('app_about_index') }}" class="hover:text-orange-500 transition duration-300">À propos</a>
+            <a href="{{ path('app_contact_index') }}" class="hover:text-orange-500 transition duration-300">Contact</a>
+        </div>
 
     <hr class="border-gray-700 mb-6">
 
@@ -342,6 +394,29 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(statPanel);
 });
 
+const burgerBtn = document.getElementById("burger-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+// Menü aç/kapa
+burgerBtn.addEventListener("mouseover", (event) => {
+    event.stopPropagation();
+    mobileMenu.classList.remove("hidden");
+});
+
+document.addEventListener("click", (event) => {
+    const isMenuVisible = !mobileMenu.classList.contains("hidden");
+    
+    if(isMenuVisible && !burgerBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+        mobileMenu.classList.add("hidden");
+    }
+});
+
+// Ekran genişleyince (md ve üstü) mobil menüyü otomatik kapat
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 768) {
+    mobileMenu.classList.add("hidden");
+  }
+});
 
 </script>
 

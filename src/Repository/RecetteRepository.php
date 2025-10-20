@@ -32,6 +32,22 @@ class RecetteRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findRecettesPopulaires(int $limit = null): array
+        {
+            $qb = $this->createQueryBuilder('r')
+                ->leftJoin('r.commentaires', 'c')   // yorumları bağla
+                ->addSelect('AVG(c.note) as HIDDEN avgNote') // ortalama not hesapla
+                ->groupBy('r.id')
+                ->orderBy('avgNote', 'DESC'); // en yüksek nottan başla
+
+            if ($limit) {
+                $qb->setMaxResults($limit);
+            }
+
+            return $qb->getQuery()->getResult();
+        }
+
+
     //    public function findOneBySomeField($value): ?Recette
     //    {
     //        return $this->createQueryBuilder('r')

@@ -12,10 +12,10 @@
             {{ form_row(form.titre, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
         </div>
         <div class="mb-4">
-            {{ form_row(form.description, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32'}}) }}
+            {{ form_row(form.description, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
         </div>
         <div class="mb-4">
-            {{ form_row(form.ingredients, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+            {{ form_row(form.ingredients, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32'}}) }}
         </div>
         <div class="mb-4">
             {{ form_row(form.etapes, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32'}}) }}
@@ -28,12 +28,25 @@
         </div>
         
         <div class="mb-4">
-            {{ form_label(form.image, null, {'label_attr': {'class': 'block text-gray-700 text-sm font-bold mb-2'}}) }}
-            <div class="relative flex items-center">
-                <i class="fas fa-camera text-2xl text-gray-500 absolute left-3"></i>
-                {{ form_widget(form.image, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-10'}}) }}
+        {{ form_label(form.image, null, {'label_attr': {'class': 'block text-gray-700 text-sm font-bold mb-2'}}) }}
+        
+            <div class="relative flex items-center space-x-4">
+                <!-- Custom input container -->
+                    <label for="{{ form.image.vars.id }}" 
+                        class="flex items-center bg-gray-100 border rounded px-4 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-camera text-xl text-gray-600 mr-2"></i>
+                        <i class="fas fa-plus text-lg text-orange-500"></i>
+                        <span class="ml-2 text-gray-400 text-sm">Choisir un fichier</span>
+                    </label>
+                    
+                    <!-- Orijinal input gizleniyor -->
+                    {{ form_widget(form.image, {'attr': {'class': 'hidden'}}) }}
+
+                    <!-- Sağdaki seçilen dosya adı -->
+                    <span id="file-chosen" class="text-gray-400 text-sm italic">Aucun fichier choisi</span>
             </div>
-            {{ form_errors(form.image) }}
+        
+                {{ form_errors(form.image) }}
         </div>
 
         <div class="flex items-center justify-between mt-6">
@@ -46,3 +59,22 @@
         </div>
     {{ form_end(form) }}
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const fileInput = document.getElementById("{{ form.image.vars.id }}");
+        const fileChosen = document.getElementById("file-chosen");
+
+        fileInput.addEventListener("change", function(){
+            if (this.files.length > 0) {
+                fileChosen.textContent = this.files[0].name;
+                fileChosen.classList.remove("text-gray-400", "italic");
+                fileChosen.classList.add("text-gray-700", "font-medium");
+            } else {
+                fileChosen.textContent = "Aucun fichier choisi";
+                fileChosen.classList.add("text-gray-400", "italic");
+            }
+        });
+    });
+</script>
+

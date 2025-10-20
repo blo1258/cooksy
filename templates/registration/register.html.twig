@@ -10,7 +10,15 @@
     {% endfor %}
 
     <div class="min-h-screen flex items-center justify-center bg-[#FF7043] p-4">
+        
+            
+        
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg transition-transform transform hover:scale-[1.01] duration-300">
+            <div class="text-right mb-5">
+                <a href="{{ path('app_accueil') }}" class="inline-block px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-600 transition duration-300">
+                    <i class="fas fa-home"></i> Accueil
+                </a>
+            </div>
             <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">S'inscrire</h1>
             
             {{ form_errors(registrationForm) }}
@@ -38,13 +46,6 @@
                         attr: {'class': 'mt-1 block w-full px-4 py-2 border border-gray-300 rounded-full shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 transition duration-300'}
                     }) }}
                 </div>
-                
-                {# Onay kutusu metnin solunda olacak şekilde güncellendi #}
-                <div class="flex items-center space-x-2">
-                    {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500'} }) }}
-                    <label for="registration_form_agreeTerms" class="text-sm text-gray-900">J'accepte tous les termes et conditions.</label>
-                </div>
-
                 {# Profil fotoğrafı yükleme alanı 'S'inscrire' butonunun üstünde #}
                 <div class="mt-4">
                     {{ form_widget(registrationForm.image, { 'attr': {'class': 'hidden', 'id': 'registration_form_image'} }) }}
@@ -54,6 +55,12 @@
                         </svg>
                         <span id="file-name">Aucun fichier sélectionné</span>
                     </label>
+                </div>
+                
+                {# Onay kutusu metnin solunda olacak şekilde güncellendi #}
+                <div class="flex items-center space-x-2">
+                    {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500'} }) }}
+                    <label for="registration_form_agreeTerms" class="text-sm text-gray-900">J'accepte tous les termes et conditions.</label>
                 </div>
 
                 <script>
